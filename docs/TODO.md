@@ -8,6 +8,7 @@
 
 ## Just shipped (last cycle)
 
+- SPEC 0.1+0.2+0.3: confirmed studfinderapp.com is live on user's VPS (nginx, Let's Encrypt, web root `/var/www/studfinderapp.com`); documented DNS/TLS/hosting in SPEC; removed broken iTunes + Google Play badges from index.html; added F-Droid/GitHub CTA; marked 0.3 resolved (no migration needed) — by sst-dev-cycle at 2026-05-27T13:30:00Z
 - Switched signing target from the legacy 2022 Studfinder keystore (`extras/key-signing/keystore.jks`) to the shared toadlybroodle keystore (`~/Dev/dev-creds/toadlybroodleKeyStore.jks`) — same cert MinimaList's F-Droid release uses (SHA-256 `b800dcf0a7725e2f71987c40d979757acd328a23de2e93a7efc0e400aeb2db69`). Trade-off accepted: breaks signature continuity for prior Play Store sideloads (Play Store listing is suspended anyway), gains consistency across toadlyBroodle's F-Droid catalog and reuses MinimaList's pre-known cert digest in the fdroiddata YAML. Updated SPEC 3.5 (rewire to shared keystore via `app/release.keystore.properties` pattern + extend `.gitignore`), 4.6 (verify post-build digest matches pre-known value as sanity check), 4.7 (APK naming `studfinder-v%v-release.apk` mirrors MinimaList), 5.1 (YAML mirrors MinimaList structure with pre-known `AllowedAPKSigningKeys`). — by manual at 2026-05-27.
 - Switched F-Droid distribution from F-Droid-key path to reproducible-builds-with-developer-signing. Added SPEC 4.6 (build+sign+verify cert SHA-256), 4.7 (publish signed APK as GitHub Release), expanded 5.1 with `Binaries:` + `AllowedAPKSigningKeys:` YAML fields. — by manual at 2026-05-27.
 - Moved Android source from `C:\Users\rob\Dev\android\Studfinder2023` to `~/Dev/android/Studfinder2023` (432MB, includes `.git` with full history) — by manual at 2026-05-27.
@@ -16,9 +17,6 @@
 
 ## Next up (queued for next cycle)
 
-- [easy] Confirm production deploy target (DNS, TLS issuer, what's actually live vs 2023 cPanel backup). Reason: SPEC 0.1 — blocks every website-side phase.
-- [easy] Remove broken App Store / Play Store badges from `public_html/index.html`; replace with placeholder F-Droid CTA (GitHub link until F-Droid listing live). Reason: SPEC 0.2 — every visitor today bounces.
-- [medium] Pick hosting target (cPanel vs VPS vs Cloudflare Pages — Pages recommended) and redeploy. Reason: SPEC 0.3.
 - [easy] Install Plausible (preferred) or GA4 with custom events: affiliate-click, ad-impression, F-Droid-badge-click, PWA-install. Reason: SPEC 0.4 — baseline before any monetization change.
 - [easy] Verify GSC ownership post-redeploy and resubmit `sitemap.xml`. Reason: SPEC 0.5.
 - [medium] Delete `app/src/main/java/org/bitanon/studfinder/AdMob.kt`, remove all call sites in `StudFActivity.kt`, strip `play-services-ads` dep + AdMob manifest entries. Reverse-grep audit. Reason: SPEC 3.1 — first F-Droid blocker.
