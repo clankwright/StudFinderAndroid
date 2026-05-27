@@ -3,18 +3,21 @@ plugins {
     id 'org.jetbrains.kotlin.android'
 }
 
-// load in keystore credentials
-def keyStoreCredsPropertiesFile = rootProject.file("extras/key-signing/keyStoreCreds.properties")
-def keyStoreCredsProperties = new Properties()
-keyStoreCredsProperties.load(new FileInputStream(keyStoreCredsPropertiesFile))
+def releaseKeystorePropsFile = rootProject.file("app/release.keystore.properties")
+def releaseKeystoreProps = new Properties()
+if (releaseKeystorePropsFile.exists()) {
+    releaseKeystorePropsFile.withInputStream { releaseKeystoreProps.load(it) }
+}
 
 android {
-    signingConfigs {
-        release {
-            storeFile rootProject.file(keyStoreCredsProperties['storeFile'])
-            storePassword keyStoreCredsProperties['storePassword']
-            keyAlias keyStoreCredsProperties['keyAlias']
-            keyPassword keyStoreCredsProperties['keyPassword']
+    if (!releaseKeystoreProps.isEmpty()) {
+        signingConfigs {
+            release {
+                storeFile rootProject.file("app/" + releaseKeystoreProps['storeFile'])
+                storePassword releaseKeystoreProps['storePassword']
+                keyAlias releaseKeystoreProps['keyAlias']
+                keyPassword releaseKeystoreProps['keyPassword']
+            }
         }
     }
     namespace 'org.bitanon.studfinder'
@@ -39,7 +42,9 @@ android {
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.release
+            if (!releaseKeystoreProps.isEmpty()) {
+                signingConfig signingConfigs.release
+            }
         }
     }
     compileOptions {

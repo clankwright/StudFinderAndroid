@@ -8,6 +8,7 @@
 
 ## Just shipped (last cycle)
 
+- SPEC 3.5+3.6+3.7: rewired app/build.gradle signing to shared toadlybroodle keystore (gated on app/release.keystore.properties existence), extended .gitignore (*.jks/*.keystore/*.keystore.properties/*.apk), created docs/REMOVED-CLOUD-SURFACE.md, all 16 cloud-strip + 7 signing-config checks pass, assembleDebug BUILD SUCCESSFUL with JDK 17 pin in gradle.properties — by sst-dev-cycle at 2026-05-27T08:00:00Z
 - SPEC 3.1+3.2+3.3+3.4: deleted AdMob.kt + Firebase.kt, stripped all call sites from StudFActivity.kt + StudFView.kt, removed Firebase/AdMob plugins and deps from build.gradle, deleted google-services.json, removed INTERNET/ACCESS_NETWORK_STATE permissions and all GMS meta-data from manifest; all 16 strip-audit checks pass; `./gradlew clean assembleDebug` succeeds — by sst-dev-cycle at 2026-05-27T06:00:00Z
 - SPEC 0.4+0.5: added Plausible analytics (outbound-links extension, F-Droid-badge-click event, stub fn) to index.html; updated sitemap.xml lastmod to 2026-05-27; deployed to VPS; GSC ownership confirmed via DNS TXT record — by sst-dev-cycle at 2026-05-27T05:00:00Z
 - SPEC 0.1+0.2+0.3: confirmed studfinderapp.com is live on user's VPS (nginx, Let's Encrypt, web root `/var/www/studfinderapp.com`); documented DNS/TLS/hosting in SPEC; removed broken iTunes + Google Play badges from index.html; added F-Droid/GitHub CTA; marked 0.3 resolved (no migration needed) — by sst-dev-cycle at 2026-05-27T13:30:00Z
@@ -19,9 +20,6 @@
 
 ## Next up (queued for next cycle)
 
-- [medium] Rewire `app/build.gradle` to load `app/release.keystore.properties` (gitignored) pointing `storeFile` at `~/Dev/dev-creds/toadlybroodleKeyStore.jks`; gate the `signingConfigs.release` block on properties-file existence so debug builds work without the keystore; extend `.gitignore` with `*.jks`, `*.keystore`, `*.keystore.properties`, `*.apk`. Reason: SPEC 3.5 — mirrors MinimaList's pattern.
-- [easy] Final reverse-grep audit of `firebase|gms|admob|crashlytics|ca-app-pub` across app/src; document in `docs/REMOVED-CLOUD-SURFACE.md`. Reason: SPEC 3.6.
-- [easy] Confirm clean `./gradlew clean assembleDebug` after strip. Reason: SPEC 3.7.
 - [medium] Build + sign release APK with shared keystore; rename to `studfinder-v15-release.apk`; sanity-verify signing cert SHA-256 matches the pre-known `b800dcf0a7725e2f71987c40d979757acd328a23de2e93a7efc0e400aeb2db69`. Reason: SPEC 4.6 — verifies the keystore wiring is correct and produces the digest the fdroiddata YAML already expects.
 - [medium] Publish `studfinder-v15-release.apk` as GitHub Release artifact attached to tag `v15`. Reason: SPEC 4.7 — F-Droid `Binaries:` URL target.
 - [medium] Rewrite landing-page copy: lead with the F-Droid open-source app + physical-tools angle. Reason: SPEC 1.1 — kicks off the affiliate pivot in parallel with F-Droid prep.
