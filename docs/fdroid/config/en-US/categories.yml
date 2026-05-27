@@ -1,0 +1,32 @@
+Connectivity:
+  description: Connectivity apps
+Development:
+  description: Development tools
+Games:
+  description: Games
+Graphics:
+  description: Graphics
+Internet:
+  description: Internet
+Money:
+  description: Money and finance
+Multimedia:
+  description: Multimedia
+Navigation:
+  description: Navigation
+Phone & SMS:
+  description: Phone and SMS
+Reading:
+  description: Reading
+Science & Education:
+  description: Science and education
+Security:
+  description: Security
+Sports & Health:
+  description: Sports and health
+System:
+  description: System utilities
+Time:
+  description: Time
+Writing:
+  description: Writing

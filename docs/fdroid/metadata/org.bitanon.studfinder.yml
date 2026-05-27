@@ -1,0 +1,26 @@
+Categories:
+  - System
+
+License: Apache-2.0
+AuthorName: toadlyBroodle
+SourceCode: https://github.com/toadlyBroodle/StudFinderAndroid
+IssueTracker: https://github.com/toadlyBroodle/StudFinderAndroid/issues
+
+Name: Stud Finder
+
+AllowedAPKSigningKeys: b800dcf0a7725e2f71987c40d979757acd328a23de2e93a7efc0e400aeb2db69
+
+Binaries: https://github.com/toadlyBroodle/StudFinderAndroid/releases/download/v%v/studfinder-v%v-release.apk
+
+Builds:
+  - versionName: "2.0"
+    versionCode: 15
+    commit: v15
+    gradle:
+      - release
+
+AutoUpdateMode: Version
+UpdateCheckMode: Tags
+UpdateCheckData: app/build.gradle|versionCode\s+([0-9]+)|.|v$1
+CurrentVersion: "2.0"
+CurrentVersionCode: 15

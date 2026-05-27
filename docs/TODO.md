@@ -8,6 +8,7 @@
 
 ## Just shipped (last cycle)
 
+- SPEC 5.1+5.2: drafted docs/fdroid/metadata/org.bitanon.studfinder.yml + categories config; fdroid lint passes; 25→41 tests pass — by sst-dev-cycle at 2026-05-27T21:00:00Z
 - SPEC 1.1: rewrote landing-page copy with open-source+physical-tools lead, added "Why open source" section explaining F-Droid path; deployed to VPS; 21→25 tests pass — by sst-dev-cycle at 2026-05-27T20:00:00Z
 - SPEC 4.8: replace tag_sha==head_sha with ancestor check in test_tag_v15_points_to_head; 20→21 tests pass — by sst-dev-cycle at 2026-05-27T19:00:00Z
 - SPEC 4.5+4.2: created annotated git tag v15 at HEAD; fastlane metadata (title, short/full description, changelog/15.txt, 512×512 icon upscaled from xxxhdpi); phoneScreenshots/ dir created; 11→21 tests pass — by sst-dev-cycle at 2026-05-27T18:30:00Z
