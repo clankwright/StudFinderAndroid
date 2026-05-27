@@ -63,7 +63,8 @@ def test_fdroid_yaml_allowed_signing_keys(parsed):
 
 def test_fdroid_yaml_binaries_url(parsed):
     binaries = parsed.get("Binaries", "")
-    assert "%v" in binaries, "Binaries URL must contain %v version placeholder"
+    assert "%c" in binaries, "Binaries URL must use %c (versionCode) not %v (versionName) — tag v15 is versionCode-based"
+    assert "%v" not in binaries, "Binaries URL must NOT use %v (resolves to '2.0', not '15') — use %c instead"
     assert "studfinder" in binaries.lower(), "Binaries URL must reference studfinder APK"
     assert "toadlyBroodle/StudFinderAndroid" in binaries
 

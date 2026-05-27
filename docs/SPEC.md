@@ -88,7 +88,7 @@ Mirror MinimaList's `docs/FDROID.md` checklist. Use the merge-request path (pref
 - [ ] 5.5 [easy] **Confirm app appears in F-Droid index** (typically 24-48 hours after MR merge). Capture the F-Droid listing URL — needed for Phase 7.
 
 **Review follow-ups (open — schedule as the next `/sst-dev-cycle` cycle):**
-- [ ] 5.6 [easy] [should-fix] `docs/fdroid/metadata/org.bitanon.studfinder.yml:13` — `Binaries:` uses `%v` (versionName "2.0") but Phase 4.5 tagged `v15` (versionCode-based) and Phase 4.7 plans filename `studfinder-v15-release.apk`; F-Droid's verifier resolves `%v` → "2.0" → looks for `studfinder-v2.0-release.apk` at tag `v2.0`, which will not exist, causing Binaries verification to fail at submission. Proposed fix: replace `v%v` with `v%c` in the `Binaries:` field and update `docs/test_fdroid_yaml.py:66` to assert `%c` instead of `%v`.
+- [x] 5.6 [easy] [should-fix] `docs/fdroid/metadata/org.bitanon.studfinder.yml:13` — `Binaries:` uses `%v` (versionName "2.0") but Phase 4.5 tagged `v15` (versionCode-based) and Phase 4.7 plans filename `studfinder-v15-release.apk`; F-Droid's verifier resolves `%v` → "2.0" → looks for `studfinder-v2.0-release.apk` at tag `v2.0`, which will not exist, causing Binaries verification to fail at submission. Fixed: replaced `v%v` with `v%c` in the `Binaries:` field; updated `docs/test_fdroid_yaml.py:64-68` to assert `%c` present and `%v` absent.
 
 ### Phase 6: Device testing & QA
 

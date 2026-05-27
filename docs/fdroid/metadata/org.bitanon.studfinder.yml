@@ -10,7 +10,7 @@ Name: Stud Finder
 
 AllowedAPKSigningKeys: b800dcf0a7725e2f71987c40d979757acd328a23de2e93a7efc0e400aeb2db69
 
-Binaries: https://github.com/toadlyBroodle/StudFinderAndroid/releases/download/v%v/studfinder-v%v-release.apk
+Binaries: https://github.com/toadlyBroodle/StudFinderAndroid/releases/download/v%c/studfinder-v%c-release.apk
 
 Builds:
   - versionName: "2.0"

@@ -8,6 +8,7 @@
 
 ## Just shipped (last cycle)
 
+- SPEC 5.6: fix Binaries %v→%c in fdroid YAML (versionCode-based URL matches tag v15 + planned APK filename); assert %c + deny %v in test; 41→41 tests pass — by sst-dev-cycle at 2026-05-27T22:00:00Z
 - SPEC 5.1+5.2: drafted docs/fdroid/metadata/org.bitanon.studfinder.yml + categories config; fdroid lint passes; 25→41 tests pass — by sst-dev-cycle at 2026-05-27T21:00:00Z
 - SPEC 1.1: rewrote landing-page copy with open-source+physical-tools lead, added "Why open source" section explaining F-Droid path; deployed to VPS; 21→25 tests pass — by sst-dev-cycle at 2026-05-27T20:00:00Z
 - SPEC 4.8: replace tag_sha==head_sha with ancestor check in test_tag_v15_points_to_head; 20→21 tests pass — by sst-dev-cycle at 2026-05-27T19:00:00Z
@@ -26,7 +27,6 @@
 
 ## Next up (queued for next cycle)
 
-- [easy] [should-fix] 5.6 `docs/fdroid/metadata/org.bitanon.studfinder.yml:13` — fix Binaries: replace %v with %c to match versionCode-based tag v15 convention; update docs/test_fdroid_yaml.py:66 to assert %c — review of 42ac294
 - [medium] Build + sign release APK with shared keystore; rename to `studfinder-v15-release.apk`; sanity-verify signing cert SHA-256 matches the pre-known `b800dcf0a7725e2f71987c40d979757acd328a23de2e93a7efc0e400aeb2db69`. Reason: SPEC 4.6. BLOCKER: requires `app/release.keystore.properties` to exist with storeFile/storePassword/keyAlias/keyPassword for `~/Dev/dev-creds/toadlybroodleKeyStore.jks`. Create this file (gitignored) before running this cycle.
 - [medium] Publish `studfinder-v15-release.apk` as GitHub Release artifact attached to tag `v15`. Reason: SPEC 4.7 — F-Droid `Binaries:` URL target. Depends on 4.6.
 - [easy] Sign up for Amazon Associates (US + OneLink for UK/CA/AU). Reason: SPEC 1.2.
