@@ -1,7 +1,9 @@
-"""Tests for index.html changes (SPEC 0.2): broken store badges removed, F-Droid/GitHub CTA added."""
+"""Tests for studfinderapp.com website changes (SPEC 0.2, 0.4, 0.5)."""
 import re
+import xml.etree.ElementTree as ET
 
 HTML_PATH = "/home/rob/Dev/websites/studfinderapp.com/public_html/index.html"
+SITEMAP_PATH = "/home/rob/Dev/websites/studfinderapp.com/public_html/sitemap.xml"
 
 
 def read_html():
@@ -41,3 +43,54 @@ def test_fdroid_cta_text_present():
     lower = html.lower()
     assert "f-droid" in lower or "fdroid" in lower, "No F-Droid reference found"
     assert "open-source" in lower or "open source" in lower, "No open-source mention found"
+
+
+# SPEC 0.4: Plausible analytics
+
+def test_plausible_script_present():
+    html = read_html()
+    assert "plausible.io/js/script" in html, "Plausible script tag not found in <head>"
+    assert 'data-domain="studfinderapp.com"' in html, "Plausible data-domain not set to studfinderapp.com"
+
+
+def test_plausible_outbound_links_extension():
+    html = read_html()
+    assert "outbound-links" in html, (
+        "Plausible outbound-links extension missing — needed for automatic affiliate-click tracking in Phase 1"
+    )
+
+
+def test_plausible_stub_defined():
+    html = read_html()
+    assert "window.plausible" in html, (
+        "Plausible queue stub not defined — custom events will silently fail before the script loads"
+    )
+
+
+def test_fdroid_badge_click_event():
+    html = read_html()
+    assert (
+        "plausible('F-Droid-badge-click')" in html
+        or 'plausible("F-Droid-badge-click")' in html
+    ), "F-Droid-badge-click event not wired to the primary download button"
+
+
+# SPEC 0.5: Sitemap lastmod
+
+def test_sitemap_lastmod_updated():
+    tree = ET.parse(SITEMAP_PATH)
+    ns = {"sm": "http://www.sitemaps.org/schemas/sitemap/0.9"}
+    lastmods = [url.find("sm:lastmod", ns).text for url in tree.findall("sm:url", ns)]
+    assert lastmods, "No <lastmod> entries found in sitemap.xml"
+    assert all("2023" not in d for d in lastmods), (
+        f"sitemap.xml still has stale 2023 lastmod: {lastmods}"
+    )
+
+
+def test_sitemap_root_url_present():
+    tree = ET.parse(SITEMAP_PATH)
+    ns = {"sm": "http://www.sitemaps.org/schemas/sitemap/0.9"}
+    locs = [url.find("sm:loc", ns).text for url in tree.findall("sm:url", ns)]
+    assert any("studfinderapp.com" in loc for loc in locs), (
+        "Root URL studfinderapp.com not present in sitemap.xml"
+    )

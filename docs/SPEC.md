@@ -25,8 +25,8 @@ The current `index.html` still links to the suspended App Store / Play Store lis
 - [x] 0.1 [easy] **Confirm production deploy target.** Where is studfinderapp.com currently served from? Check DNS (`dig studfinderapp.com`), TLS cert issuer, and which files are actually live vs the 2023 cPanel backup we have locally. Document in this SPEC under "Architecture/stack".
 - [x] 0.2 [easy] **Remove broken store badges from `public_html/index.html`.** The two `<table>` blocks with iTunes + Google Play badges link to suspended listings. Replace with a placeholder "use the open-source app from F-Droid" CTA pointing at the future F-Droid listing URL; until F-Droid is live, link to the GitHub repo + APK release-tag download.
 - [x] 0.3 [medium] **Pick hosting target and deploy.** Three candidates: keep cPanel (if still active and paid), move to user's VPS (cheap, full control, more ops), or Cloudflare Pages (recommended: free, static, edge CDN, automatic SSL, git-deploy). Decide, document, push the existing site there. **Resolved by 0.1 investigation: site is already live on the VPS. No migration needed.**
-- [ ] 0.4 [easy] **Install Plausible (preferred) or GA4** with custom events for affiliate-click, ad-impression, F-Droid-badge-click, PWA-install. Baseline must exist before any monetization change.
-- [ ] 0.5 [easy] **Verify Google Search Console ownership** post-redeploy and resubmit `sitemap.xml`. The current sitemap only lists `/` — extend it as new pages land in later phases.
+- [x] 0.4 [easy] **Install Plausible (preferred) or GA4** with custom events for affiliate-click, ad-impression, F-Droid-badge-click, PWA-install. Baseline must exist before any monetization change.
+- [x] 0.5 [easy] **Verify Google Search Console ownership** post-redeploy and resubmit `sitemap.xml`. The current sitemap only lists `/` — extend it as new pages land in later phases.
 
 ### Phase 1: Affiliate pivot (fastest website revenue, no infra)
 
