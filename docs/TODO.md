@@ -27,6 +27,7 @@
 
 ## Next up (queued for next cycle)
 
+- [easy] [should-fix] 5.7 `docs/SPEC.md:84` — update stale %v URL template in 5.1 description + 4.7 parenthetical to match the %c fix in the actual YAML — review of 82c4723
 - [medium] Build + sign release APK with shared keystore; rename to `studfinder-v15-release.apk`; sanity-verify signing cert SHA-256 matches the pre-known `b800dcf0a7725e2f71987c40d979757acd328a23de2e93a7efc0e400aeb2db69`. Reason: SPEC 4.6. BLOCKER: requires `app/release.keystore.properties` to exist with storeFile/storePassword/keyAlias/keyPassword for `~/Dev/dev-creds/toadlybroodleKeyStore.jks`. Create this file (gitignored) before running this cycle.
 - [medium] Publish `studfinder-v15-release.apk` as GitHub Release artifact attached to tag `v15`. Reason: SPEC 4.7 — F-Droid `Binaries:` URL target. Depends on 4.6.
 - [easy] Sign up for Amazon Associates (US + OneLink for UK/CA/AU). Reason: SPEC 1.2.

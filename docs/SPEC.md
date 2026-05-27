@@ -89,6 +89,7 @@ Mirror MinimaList's `docs/FDROID.md` checklist. Use the merge-request path (pref
 
 **Review follow-ups (open — schedule as the next `/sst-dev-cycle` cycle):**
 - [x] 5.6 [easy] [should-fix] `docs/fdroid/metadata/org.bitanon.studfinder.yml:13` — `Binaries:` uses `%v` (versionName "2.0") but Phase 4.5 tagged `v15` (versionCode-based) and Phase 4.7 plans filename `studfinder-v15-release.apk`; F-Droid's verifier resolves `%v` → "2.0" → looks for `studfinder-v2.0-release.apk` at tag `v2.0`, which will not exist, causing Binaries verification to fail at submission. Fixed: replaced `v%v` with `v%c` in the `Binaries:` field; updated `docs/test_fdroid_yaml.py:64-68` to assert `%c` present and `%v` absent.
+- [ ] 5.7 [easy] [should-fix] `docs/SPEC.md:84` — the 5.1 description still shows the pre-fix `v%v/studfinder-v%v-release.apk` Binaries URL template; `docs/SPEC.md:75` still claims the APK filename "matches MinimaList's `<app>-v%v-release.apk` convention" when the YAML now uses `%c`. An engineer reading the 5.1 description as a reference during Phase 5.3 MR drafting would see a URL that contradicts the actual YAML and could reintroduce the wrong placeholder. Proposed fix: update the Binaries example in the 5.1 description from `v%v/studfinder-v%v-release.apk` to `v%c/studfinder-v%c-release.apk`; update the 4.7 parenthetical to state that Studfinder uses versionCode-based (`%c`) naming, not `%v`.
 
 ### Phase 6: Device testing & QA
 
