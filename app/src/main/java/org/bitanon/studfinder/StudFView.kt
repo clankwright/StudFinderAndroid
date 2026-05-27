@@ -141,7 +141,7 @@ class StudFView(context: Context, attributes: AttributeSet?) : CaughtView(contex
 		try {
 			beep = MediaPlayer.create(context, R.raw.beep)
 		} catch (e: Exception) {
-			//FirebaseCrash.report(e)
+			// Phase 3.2: removed crash reporter
 			Log.d(TAG, "Error creating beep: $e")
 		}
 

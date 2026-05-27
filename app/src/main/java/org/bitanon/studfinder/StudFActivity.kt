@@ -9,8 +9,6 @@ import android.os.Bundle
 import android.view.*
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import com.google.firebase.analytics.FirebaseAnalytics
-import java.util.*
 
 const val SHARED_PREFS = "STUD_FINDER_SHARED_PREFS"
 
@@ -26,17 +24,10 @@ class StudFActivity : AppCompatActivity() {
 
 	private var sensTextView: TextView? = null
 	private var mUIRelLay: RelativeLayout? = null
-	private var mFirebaseAnalytics: FirebaseAnalytics? = null
 
 	@SuppressLint("ClickableViewAccessibility")
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-
-		// Obtain the FirebaseAnalytics instance.
-		mFirebaseAnalytics = FirebaseAnalytics.getInstance(this)
-
-		// load advertising
-		AdMob.init(this)
 
 		// Remove action tool title bar
 		supportActionBar?.hide()
@@ -68,9 +59,6 @@ class StudFActivity : AppCompatActivity() {
 
 			// save preferences before ad shows and resets widget state
 			savePrefs()
-
-			// show beeper interstitial
-			//AdMob.showInterstitial(this)
 		}
 
 		sensBar?.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener{
@@ -93,9 +81,6 @@ class StudFActivity : AppCompatActivity() {
 				currentlyDetecting = false
 				powerBut!!.isChecked = false
 				powerBut!!.isPressed = false
-
-				// show detect interstitial after power button released
-				//AdMob.showInterstitial(this)
 			}
 			false
 		}
@@ -131,20 +116,15 @@ class StudFActivity : AppCompatActivity() {
 	}
 
 	private fun showInstructions() {
-		Firebase.logCustomEvent(INSTRUCTIONS_SHOW)
 
 		// display alert containing instructions
 		val instructions = AlertDialog.Builder(this)
 		instructions.setTitle(getString(R.string.menu_instructions))
 		instructions.setMessage(getString(R.string.instructions))
-		instructions.setPositiveButton(getString(R.string.instr_but_lab)) { _, _ ->
-			// show instructions interstitial
-			AdMob.showInterstitial(this)
-		}
+		instructions.setPositiveButton(getString(R.string.instr_but_lab)) { _, _ -> }
 
 		// send to my developer website
 		instructions.setNeutralButton(R.string.rate_support) { _, _ ->
-			Firebase.logCustomEvent(INSTRUCTIONS_SUPPORT_CLICK)
 			val uri = Uri.parse("https://studfinderapp.com/")
 			val intent = Intent(Intent.ACTION_VIEW, uri)
 			startActivity(intent)
