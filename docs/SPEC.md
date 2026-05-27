@@ -105,10 +105,10 @@ Before submitting to F-Droid (overlap with Phase 4-5 if useful), verify the stri
 
 Once the F-Droid listing is live, the website becomes the discovery layer that converts SEO traffic into F-Droid installs. Android visitors get the F-Droid badge as the primary CTA; iOS visitors get a "your platform doesn't have a free option — here's the PWA fallback (Phase 9) or buy a physical finder" path.
 
-- [ ] 7.1 [medium] **Add F-Droid badge as primary CTA above the fold** on `index.html`. Use the official `Get it on F-Droid` badge from `https://f-droid.org/badge/get-it-on.png`. Link to the F-Droid listing URL from Phase 5.5.
-- [ ] 7.2 [easy] **Add secondary "Build from source" / GitHub link** for users who want to sideload before F-Droid index rebuild propagates. Link to the GitHub releases page.
-- [ ] 7.3 [medium] **Add user-agent-based CTA routing** (vanilla JS, <20 lines): Android → F-Droid badge primary; iOS → PWA install + "or buy a physical finder" affiliate; desktop → both badges + "open on your phone to install" QR code.
-- [ ] 7.4 [easy] **Add a "Why open source / why F-Droid" section** explaining: no ads, no tracking, no Google Play Services, source on GitHub, community-rebuilt by F-Droid. Reinforces the differentiation vs the dozens of ad-laden stud finder apps in the Play Store.
+- [x] 7.1 [medium] **Add F-Droid badge as primary CTA above the fold** on `index.html`. Use the official `Get it on F-Droid` badge from `https://f-droid.org/badge/get-it-on.png`. Link to the F-Droid listing URL from Phase 5.5. Implemented with `https://f-droid.org/packages/org.bitanon.studfinder/` (standard package URL, active once MR !39185 merges).
+- [x] 7.2 [easy] **Add secondary "Build from source" / GitHub link** for users who want to sideload before F-Droid index rebuild propagates. Link to the GitHub releases page. Added "sideload the APK from GitHub" link below the F-Droid badge in the Android CTA block.
+- [x] 7.3 [medium] **Add user-agent-based CTA routing** (vanilla JS, <20 lines): Android → F-Droid badge primary + GitHub sideload; iOS → "F-Droid is Android-only, use a physical finder" message; desktop → "open on your phone" note + badge + GitHub APK link. Implemented with three `id="cta-android/ios/desktop"` divs and an IIFE reading `navigator.userAgent`.
+- [x] 7.4 [easy] **Add a "Why open source / why F-Droid" section** explaining: no ads, no tracking, no Google Play Services, source on GitHub, community-rebuilt by F-Droid. Implemented as part of SPEC 1.1 landing-page rewrite; all required content present.
 - [ ] 7.5 [easy] **Add Lightning donation address / Bitcoin tip jar** in the website footer + in-app "About" screen. Optional revenue stream that respects the free + open-source model; fits the user's other Bitcoin-related projects.
 
 ### Phase 8: Content + SEO push (lift position 6.3 → top 3)

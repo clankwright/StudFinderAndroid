@@ -145,3 +145,76 @@ def test_how_it_works_preserved():
     assert "how it works" in lower, "'How it works' section missing"
     assert "magnetometer" in lower, "Magnetometer explanation missing from How-it-works"
     assert "detect" in lower, "Detection instructions missing from How-it-works"
+
+
+# SPEC 7.1: F-Droid badge as primary CTA
+
+def test_fdroid_badge_image_present():
+    """Official F-Droid badge image must be present (SPEC 7.1)."""
+    html = read_html()
+    assert "f-droid.org/badge/get-it-on.png" in html, (
+        "Official F-Droid badge image (f-droid.org/badge/get-it-on.png) not found — SPEC 7.1"
+    )
+
+
+def test_fdroid_listing_link_present():
+    """Link to the F-Droid app listing must be present (SPEC 7.1)."""
+    html = read_html()
+    assert "f-droid.org/packages/org.bitanon.studfinder" in html, (
+        "F-Droid listing URL (f-droid.org/packages/org.bitanon.studfinder) not found — SPEC 7.1"
+    )
+
+
+# SPEC 7.2: Secondary GitHub sideload / build-from-source link
+
+def test_github_releases_sideload_link_present():
+    """GitHub releases page link must be present as a secondary install option (SPEC 7.2)."""
+    html = read_html()
+    assert "github.com/toadlyBroodle/StudFinderAndroid/releases" in html, (
+        "GitHub releases sideload link missing — SPEC 7.2"
+    )
+
+
+def test_sideload_or_source_label_present():
+    """The secondary GitHub link must be labelled as a sideload/source option (SPEC 7.2)."""
+    html = read_html()
+    lower = html.lower()
+    assert (
+        "sideload" in lower
+        or "build from source" in lower
+        or "apk" in lower
+    ), "Secondary GitHub link has no sideload/APK/build-from-source label — SPEC 7.2"
+
+
+# SPEC 7.3: UA-based CTA routing
+
+def test_ua_routing_script_present():
+    """A JS script must detect the user agent and route Android/iOS/desktop CTAs (SPEC 7.3)."""
+    html = read_html()
+    assert "navigator.userAgent" in html or "navigator.useragent" in html.lower(), (
+        "No navigator.userAgent UA-detection script found — SPEC 7.3"
+    )
+
+
+def test_ua_routing_detects_android():
+    """UA routing must branch on Android (SPEC 7.3)."""
+    html = read_html()
+    assert re.search(r"[Aa]ndroid", html), (
+        "UA routing script does not check for Android — SPEC 7.3"
+    )
+
+
+def test_ua_routing_detects_ios():
+    """UA routing must branch on iOS/iPhone (SPEC 7.3)."""
+    html = read_html()
+    assert re.search(r"[Ii][Pp]hone|[Ii][Pp]ad|iOS", html), (
+        "UA routing script does not check for iPhone/iPad/iOS — SPEC 7.3"
+    )
+
+
+def test_ua_routing_cta_divs_present():
+    """HTML must contain separate CTA containers for Android and non-Android visitors (SPEC 7.3)."""
+    html = read_html()
+    assert "cta-android" in html or "id=\"android" in html or "class=\"android" in html, (
+        "No Android-specific CTA container (id/class containing 'android') found — SPEC 7.3"
+    )

@@ -8,6 +8,7 @@
 
 ## Just shipped (last cycle)
 
+- 7.1+7.2+7.3+7.4: F-Droid badge (primary CTA), GitHub sideload link, UA routing (Android/iOS/desktop divs + navigator.userAgent IIFE), "why open source" marked complete; 8 new tests in test_html.py; 51→59 tests pass — by sst-dev-cycle at 2026-05-27T12:30:00Z
 - 5.3: created branch add-org.bitanon.studfinder in fork, added YAML via GitLab API, opened MR !39185 to fdroid/fdroiddata; 5 new tests in test_fdroid_mr.py; 46→51 tests pass — by sst-dev-cycle at 2026-05-27T10:30:00Z
 - 4.9: replace apksigner verify body with aapt dump badging + assert versionCode='15' in test_release_apk_versioncode_15; 46→46 tests pass — by sst-dev-cycle at 2026-05-28T00:00:00Z
 - SPEC 4.6+4.7: built+signed release APK (assembleRelease with toadlybroodleKeyStore.jks); discovered actual cert SHA-256 e04d3854... (differs from MinimaList's older cert); corrected YAML + SPEC + tests; published studfinder-v15-release.apk to GitHub Release v15; 41→46 tests pass — by sst-dev-cycle at 2026-05-27T23:30:00Z
@@ -22,6 +23,6 @@
 
 ## Next up (queued for next cycle)
 
-- [easy] Sign up for Amazon Associates (US + OneLink for UK/CA/AU). Reason: SPEC 1.2. Note: human-only external account signup — requires user action at associate-central.amazon.com.
-- [medium] Add 4-6 affiliate product cards above the fold (Franklin ProSensor 710, Zircon HD55, magnetic, premium electronic) with UTM-tagged links + FTC disclosure. Reason: SPEC 1.3. Blocked on SPEC 1.2 (needs actual affiliate tag).
 - [medium] Respond to F-Droid reviewer feedback on MR !39185 (https://gitlab.com/fdroid/fdroiddata/-/merge_requests/39185). Reason: SPEC 5.4. Monitor for reviewer comments; iterate on YAML or app repo config as needed.
+- [easy] Add Lightning donation address in website footer + in-app "About" screen link. Reason: SPEC 7.5. Independent of F-Droid merge; can ship now.
+- [medium] Add 4-6 affiliate product cards above the fold (Franklin ProSensor 710, Zircon HD55, magnetic, premium electronic) with UTM-tagged links + FTC disclosure. Reason: SPEC 1.3. Blocked on H1.1 (Amazon Associates signup in HUMAN.md).
