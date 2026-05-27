@@ -29,6 +29,7 @@
 
 ## Next up (queued for next cycle)
 
+- [easy] [should-fix] 4.9 `docs/test_release.py:test_release_apk_versioncode_15` — replace apksigner body with aapt dump badging + assert versionCode='15' — review of 79ff68f
 - [easy] Sign up for Amazon Associates (US + OneLink for UK/CA/AU). Reason: SPEC 1.2.
 - [medium] Add 4-6 affiliate product cards above the fold (Franklin ProSensor 710, Zircon HD55, magnetic, premium electronic) with UTM-tagged links + FTC disclosure. Reason: SPEC 1.3.
 - [medium] Fork gitlab.com/fdroid/fdroiddata, copy linted YAML to metadata/org.bitanon.studfinder.yml, open MR. Reason: SPEC 5.3 — now unblocked since GitHub Release v15 + APK exist.
