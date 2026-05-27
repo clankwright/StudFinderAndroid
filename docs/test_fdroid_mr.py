@@ -17,6 +17,7 @@ UPSTREAM_ID = 36528         # fdroid/fdroiddata
 PACKAGE_ID = "org.bitanon.studfinder"
 YAML_PATH_IN_REPO = f"metadata/{PACKAGE_ID}.yml"
 LOCAL_YAML = Path("/home/rob/Dev/android/Studfinder/docs/fdroid/metadata") / f"{PACKAGE_ID}.yml"
+GITHUB_URL = "https://github.com/toadlyBroodle/StudFinderAndroid"
 
 
 def _token() -> str:
@@ -87,7 +88,14 @@ def test_fdroid_mr_description_cites_source_repo():
 
 
 def test_fdroid_mr_yaml_in_source_branch():
-    """The MR's source branch in the fork must contain metadata/org.bitanon.studfinder.yml."""
+    """The MR's source branch must contain the YAML with correct RepoType and Repo fields.
+
+    Verifies content, not just file existence, so a GitLab API push that silently
+    fails to propagate RepoType/Repo would be caught here (not just by the
+    file-name presence check that was here before).
+    """
+    import base64
+
     mr = _find_studfinder_mr()
     assert mr, f"No MR for {PACKAGE_ID} found"
     branch = mr["source_branch"]
@@ -97,4 +105,12 @@ def test_fdroid_mr_yaml_in_source_branch():
     )
     assert "file_name" in file_info, (
         f"YAML not found in branch '{branch}': {file_info.get('message', '')}"
+    )
+    content = base64.b64decode(file_info["content"]).decode("utf-8")
+    parsed = yaml.safe_load(content)
+    assert parsed.get("RepoType") == "git", (
+        f"Expected RepoType 'git', got '{parsed.get('RepoType')}'"
+    )
+    assert parsed.get("Repo") == GITHUB_URL, (
+        f"Expected Repo '{GITHUB_URL}', got '{parsed.get('Repo')}'"
     )
