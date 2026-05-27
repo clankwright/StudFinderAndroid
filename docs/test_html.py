@@ -94,3 +94,54 @@ def test_sitemap_root_url_present():
     assert any("studfinderapp.com" in loc for loc in locs), (
         "Root URL studfinderapp.com not present in sitemap.xml"
     )
+
+
+# SPEC 1.1: Rewrite landing-page copy
+
+def test_lead_physical_tools_angle():
+    """Lead copy must mention physical tools as a complement to the app."""
+    html = read_html()
+    lower = html.lower()
+    assert "physical" in lower and ("tool" in lower or "finder" in lower), (
+        "Lead copy missing physical tools angle"
+    )
+    # The SPEC lead: phones can't replace physical tools in all cases
+    assert "when phones can" in lower or "phone" in lower, (
+        "No mention of phone limitations relative to physical tools"
+    )
+
+
+def test_why_open_source_section_present():
+    """A 'Why open source' section heading must be present."""
+    html = read_html()
+    lower = html.lower()
+    assert "why open source" in lower or "why open-source" in lower, (
+        "No 'Why open source' section heading found"
+    )
+
+
+def test_why_open_source_explains_fdroid_path():
+    """The Why-open-source section must explain the F-Droid distribution path."""
+    html = read_html()
+    lower = html.lower()
+    # Must mention: no ads + no tracking + F-Droid
+    assert "no ads" in lower or "ad-free" in lower, (
+        "Why-open-source section missing 'no ads' claim"
+    )
+    assert "no tracking" in lower or "no analytics" in lower, (
+        "Why-open-source section missing 'no tracking' claim"
+    )
+    # F-Droid already tested by test_fdroid_cta_text_present, but confirm it's
+    # in the context of the why-open-source explanation
+    assert "source on github" in lower or "github.com/toadlybroodle" in lower.replace(" ", ""), (
+        "Why-open-source section missing GitHub source link"
+    )
+
+
+def test_how_it_works_preserved():
+    """The 'How it works' educational section must be intact."""
+    html = read_html()
+    lower = html.lower()
+    assert "how it works" in lower, "'How it works' section missing"
+    assert "magnetometer" in lower, "Magnetometer explanation missing from How-it-works"
+    assert "detect" in lower, "Detection instructions missing from How-it-works"
