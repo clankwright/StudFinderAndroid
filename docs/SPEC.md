@@ -1,0 +1,145 @@
+# studfinderapp.com SPEC
+
+> Canonical project spec. Every skill that runs in this project reads this file end-to-end before deciding what to do, and updates it (along with `TODO.md`) in the same commit as any code change.
+
+## Goal
+
+The main value-add for studfinderapp.com is a free, open-source, ad-free Android stud finder app distributed via F-Droid — worked on at `~/Dev/android/Studfinder/` (this repo; full clone of the original 2023 source with `.git` history intact, 19 commits, GitHub remote `github.com/toadlyBroodle/StudFinderAndroid`) with all cloud surfaces (AdMob, Firebase Analytics, Firebase Crashlytics, Google Play Services) stripped out, mirroring the workflow used for `~/Dev/MinimaList/`. The legacy untouched copy lives at `~/Dev/android/Studfinder2023/` as a read-only backup — do not edit it; all SPEC/TODO/dev-cycle work happens here. The website's job is the discovery + monetization layer that sits on top: it ranks on "stud finder app" queries (6,195 lifetime Google clicks, 185 in the last 28 days and accelerating, position 6.3 average, 94% mobile US/UK/CA/AU), routes Android visitors to the F-Droid install, routes iOS visitors to a PWA fallback (browser Magnetometer API isn't exposed on iOS Safari so iOS gets a degraded experience), and earns revenue from Amazon affiliate links to physical stud finders and display ads — both compatible with shipping a fully free app. Revenue path: affiliate + ads on the site (immediate), F-Droid app as the traffic magnet (months 1-2), then a small optional Lightning donation jar (months 3+) instead of a paid Pro tier — Pro doesn't fit an open-source distribution.
+
+## Architecture / stack (one-liner each)
+
+- **Android app** (the main product): Kotlin, minSdk 21 / targetSdk 33, `org.bitanon.studfinder` package, source at `~/Dev/android/Studfinder2023/`, GitHub at `https://github.com/toadlyBroodle/StudFinderAndroid`. Five source files (`AdMob.kt`, `Firebase.kt`, `StudFActivity.kt`, `StudFView.kt`, `CaughtView.kt`) — `AdMob.kt` + `Firebase.kt` get deleted; the other three lose their AdMob/Firebase call sites. Uses the device magnetometer + compass sensor (manifest already requires `android.hardware.sensor.compass`).
+- **Website frontend**: static HTML/CSS, currently a single `public_html/index.html` (~250 lines) with a sidebar layout — to be modernized into a small static site (no JS framework) plus a `/app/` PWA subtree for iOS-fallback.
+- **Hosting**: TBD — site files are a Feb-2023 cPanel backup; current production server unknown. Phase 0 decides between keeping cPanel, moving to the user's VPS, or Cloudflare Pages (recommended: static + free SSL + edge CDN + git-deploy).
+- **Analytics**: Google Search Console already verified. Add Plausible (preferred) or GA4 for on-page conversion tracking before any monetization change so we can measure baseline → lift. Track: outbound affiliate click, ad impression, F-Droid badge click, PWA install.
+- **Monetization**: (1) Amazon Associates affiliate, (2) Ezoic or AdSense display ads (AdSense pub ID `pub-8742224953501062` from the killed apps' inventory is already in `app-ads.txt` — same account works for web), (3) optional Lightning donation jar — both on the site and via a small in-app link in the F-Droid app.
+- **F-Droid distribution**: source-built by F-Droid's build server using the **reproducible-builds-with-developer-signing** path: developer publishes a release APK signed with the shared toadlybroodle keystore (`~/Dev/dev-creds/toadlybroodleKeyStore.jks`, mode 600, never committed; the same cert used to sign MinimaList's F-Droid release — SHA-256 `b800dcf0a7725e2f71987c40d979757acd328a23de2e93a7efc0e400aeb2db69`); F-Droid reproduces the build, byte-compares, and ships the developer-signed APK. Submission via merge request to `gitlab.com/fdroid/fdroiddata`. Trade-off: this is a different cert from the original 2022 Studfinder Play Store signing key (`extras/key-signing/keystore.jks`), so any device with a prior Play Store sideload of `org.bitanon.studfinder` cannot in-place update — must uninstall first. Acceptable because the Play Store listing is suspended (no active install funnel) and this matches MinimaList's keystore approach for consistency across toadlyBroodle's F-Droid catalog.
+
+## Phases
+
+### Phase 0: Resurrect and instrument the website
+
+The current `index.html` still links to the suspended App Store / Play Store listings, which now 404. Every visitor today bounces. Before adding monetization or routing to F-Droid we need to (a) know where the site is actually served from, (b) kill the dead CTAs, and (c) install analytics so we can measure whether the changes in Phase 1+ actually move money.
+
+- [ ] 0.1 [easy] **Confirm production deploy target.** Where is studfinderapp.com currently served from? Check DNS (`dig studfinderapp.com`), TLS cert issuer, and which files are actually live vs the 2023 cPanel backup we have locally. Document in this SPEC under "Architecture/stack".
+- [ ] 0.2 [easy] **Remove broken store badges from `public_html/index.html`.** The two `<table>` blocks with iTunes + Google Play badges link to suspended listings. Replace with a placeholder "use the open-source app from F-Droid" CTA pointing at the future F-Droid listing URL; until F-Droid is live, link to the GitHub repo + APK release-tag download.
+- [ ] 0.3 [medium] **Pick hosting target and deploy.** Three candidates: keep cPanel (if still active and paid), move to user's VPS (cheap, full control, more ops), or Cloudflare Pages (recommended: free, static, edge CDN, automatic SSL, git-deploy). Decide, document, push the existing site there.
+- [ ] 0.4 [easy] **Install Plausible (preferred) or GA4** with custom events for affiliate-click, ad-impression, F-Droid-badge-click, PWA-install. Baseline must exist before any monetization change.
+- [ ] 0.5 [easy] **Verify Google Search Console ownership** post-redeploy and resubmit `sitemap.xml`. The current sitemap only lists `/` — extend it as new pages land in later phases.
+
+### Phase 1: Affiliate pivot (fastest website revenue, no infra)
+
+While Phases 3-5 (the F-Droid path) take weeks, the site still gets traffic every day. Pivoting copy to "phone apps can find metal studs — here's also what physical tools the pros use" + Amazon affiliate links generates revenue from day one with zero ongoing cost. Compatible with the F-Droid story: phone-based magnetometer detection is limited (only finds metal screws/nails inside studs, not wood directly), so recommending good physical finders alongside our free app is honest. Conservative model at current traffic (6k clicks/yr): $70-200/yr; scales linearly with the SEO push in Phase 8.
+
+- [ ] 1.1 [medium] **Rewrite landing-page copy.** Lead: "The free, open-source, ad-free stud finder for Android — plus the physical tools that work when phones can't." Preserve the "How it works" educational content (it's good SEO and visitors value it). Add a "Why open source" paragraph explaining the F-Droid path.
+- [ ] 1.2 [easy] **Sign up for Amazon Associates** (US store at minimum). Apply for Amazon OneLink so UK/CA/AU traffic auto-routes to the correct storefront.
+- [ ] 1.3 [medium] **Add 4-6 affiliate product cards above the fold.** Recommended picks: Franklin ProSensor 710 (~$50, cult favorite), Zircon HD55 (~$30, mid-tier), CH Hanson 03040 magnetic finder (~$8, budget), one premium electronic (~$80+). Cards include image, 1-line pro/con, price range, affiliate CTA. UTM-tagged links + clear "affiliate disclosure" footer (FTC required).
+- [ ] 1.4 [easy] **Add adjacent-product affiliate links** in the "what to use studs for" section: drywall anchors, drill/driver, level, picture-hanging kit. Anchor in body copy as natural recommendations.
+- [ ] 1.5 [easy] **Configure SubID tracking** in Amazon Associates so each placement (above-fold card, mid-body link, footer) reports independently.
+
+### Phase 2: Display ads (passive revenue layer)
+
+Second revenue stream that doesn't conflict with affiliate or the F-Droid app's ad-free promise (ads only on the website, never in the app). Ezoic preferred (accepts any traffic, RPM $8-20 on DIY/tools); AdSense fallback if Ezoic rejects. The AdSense pub ID `pub-8742224953501062` from the killed apps' in-app inventory is already in `app-ads.txt` — same publisher account works for web AdSense, no re-application needed. Estimated revenue at current 6k clicks/yr: $30-90/yr AdSense, $50-120/yr Ezoic.
+
+- [ ] 2.1 [medium] **Apply to Ezoic** (preferred) or activate existing AdSense account for the domain.
+- [ ] 2.2 [easy] **Install ad units.** Three placements: above-fold mobile banner, mid-content native, footer. Stay under 30% page coverage (Core Web Vitals).
+- [ ] 2.3 [easy] **Verify performance.** PageSpeed Insights post-install: CLS <0.1, LCP <2.5s mobile. Ads that tank Web Vitals lose more SEO than they earn in revenue.
+
+### Phase 3: Strip cloud surface from the Android app
+
+Mirror the `~/Dev/MinimaList/` Phase 3 workflow. Studfinder2023 has a much smaller surface than MinimaList because the source is intact (no decompile needed) and only 5 Kotlin files are involved. Goal: zero proprietary deps, zero ads, zero analytics, zero crash reporting, zero `INTERNET` / `ACCESS_NETWORK_STATE` permissions. Result: app qualifies for F-Droid with zero anti-features. Each sub-item is a single commit; each commit ends with a reverse-grep audit proving the surface is gone.
+
+- [ ] 3.1 [medium] **Delete `app/src/main/java/org/bitanon/studfinder/AdMob.kt`** and remove all call sites in `StudFActivity.kt` (init, banner show/hide, interstitial trigger). Remove from `app/build.gradle`: `implementation 'com.google.android.gms:play-services-ads:21.4.0'`. From manifest: remove the `com.google.android.gms.ads.APPLICATION_ID` meta-data and the `com.google.android.gms.ads.AdActivity` declaration. Reverse-grep audit: `grep -rn 'AdMob\|gms.ads\|ca-app-pub-' app/src` returns nothing.
+- [ ] 3.2 [medium] **Delete `app/src/main/java/org/bitanon/studfinder/Firebase.kt`** and remove all call sites in `StudFActivity.kt` (Crashlytics init, Analytics `logEvent` calls). Remove from `app/build.gradle`: `id 'com.google.gms.google-services'`, `id 'com.google.firebase.crashlytics'`, `platform('com.google.firebase:firebase-bom:31.1.1')`, `'com.google.firebase:firebase-crashlytics-ktx'`, `'com.google.firebase:firebase-analytics-ktx'`. Delete `app/google-services.json`. Reverse-grep audit: `grep -rn 'Firebase\|firebase' app/src app/build.gradle` returns nothing.
+- [ ] 3.3 [easy] **Remove `INTERNET` and `ACCESS_NETWORK_STATE` permissions** from `AndroidManifest.xml` — the app is now fully offline. `WAKE_LOCK` stays (the detector needs the screen on). This is the qualifying change that lets F-Droid mark the app as `NoAnti-Features` rather than `NonFreeNet`.
+- [ ] 3.4 [easy] **Remove `com.google.android.gms.version` meta-data** from `AndroidManifest.xml` (it referenced Play Services version — no longer needed).
+- [ ] 3.5 [medium] **Rewire signing to the shared toadlybroodle keystore** (mirrors MinimaList's pattern). Concrete steps: (a) replace the existing `app/build.gradle` `signingConfigs.release` block — drop the `extras/key-signing/keyStoreCreds.properties` load and the `rootProject.file(...)` assertion — with a load of `app/release.keystore.properties` (gitignored, holds `storeFile` / `storePassword` / `keyAlias` / `keyPassword`); (b) point `storeFile` in that properties file at `~/Dev/dev-creds/toadlybroodleKeyStore.jks` (the master 2,089-byte cert, mode 600); (c) gate the entire `signingConfigs.release` block + the `signingConfig signingConfigs.release` line in `buildTypes.release` on `rootProject.file("app/release.keystore.properties").exists()` so contributors without the keystore can still `./gradlew assembleDebug`; (d) extend `.gitignore` with `*.jks`, `*.keystore`, `*.keystore.properties`, `*.apk` (current ignore covers `/extras` but nothing key-related elsewhere); (e) leave the now-vestigial `extras/key-signing/` directory in place — gitignored, harmless, and useful as an archive of the original 2022 Studfinder cert in case signature continuity is ever wanted later (e.g. someone resurrects the Play Store account); (f) document the new keystore path + the deliberate cert switch in `docs/REMOVED-CLOUD-SURFACE.md`'s tail. Do NOT commit `app/release.keystore.properties` or any keystore file.
+- [ ] 3.6 [easy] **Final reverse-grep audit:** `grep -rEi 'firebase|gms|admob|crashlytics|ca-app-pub' app/src app/build.gradle AndroidManifest.xml` must return no output (except comment-breadcrumbs explicitly tagged `// Phase 3.x: removed`). Document the audit result in `docs/REMOVED-CLOUD-SURFACE.md` mirroring MinimaList's log.
+- [ ] 3.7 [easy] **Confirm clean Gradle build.** `cd ~/Dev/android/Studfinder2023 && ./gradlew clean assembleDebug` must succeed with zero unresolved references.
+
+### Phase 4: F-Droid repo hygiene (LICENSE, fastlane, tag, gradle pin)
+
+Mirror MinimaList's Phase 15 prep. F-Droid requires a recognized FOSS license, reads app descriptions from fastlane metadata, builds from a specific git tag, and needs reproducible-build-friendly Gradle config.
+
+- [ ] 4.1 [easy] **Add `LICENSE` file at the Studfinder2023 repo root.** MIT or Apache-2.0 recommended (GPL-3.0-only is also accepted by F-Droid — pick what the user prefers; the rest of toadlyBroodle's repos pattern is the tiebreaker). Update `README.md` with the license badge.
+- [ ] 4.2 [medium] **Create fastlane metadata** at `fastlane/metadata/android/en-US/`: `short_description.txt` (≤80 chars), `full_description.txt` (≤4000 chars), `title.txt` (optional, ≤50 chars), `changelogs/<versionCode>.txt` (one file per release, ≤500 chars; for the F-Droid debut bump versionCode to 15 and write `changelogs/15.txt`), `images/icon.png` (512×512 export), `images/phoneScreenshots/` (1-3 PNGs at 1080×1920).
+- [ ] 4.3 [easy] **Pin `buildToolsVersion` in `app/build.gradle`** to remove ambiguity in F-Droid's build server. Verify Gradle wrapper version is pinned in `gradle/wrapper/gradle-wrapper.properties`.
+- [ ] 4.4 [easy] **Bump versionCode 14 → 15, versionName "1.13" → "2.0"** in `app/build.gradle` to mark the F-Droid debut.
+- [ ] 4.5 [easy] **Create a signed git tag `v15`** pointing at the post-strip HEAD; push to GitHub. The fdroiddata YAML's `commit:` field references this tag.
+- [ ] 4.6 [medium] **Build and sign the release APK with the shared toadlybroodle keystore.** Steps: (a) create `app/release.keystore.properties` per Phase 3.5 pointing `storeFile` at `~/Dev/dev-creds/toadlybroodleKeyStore.jks`; (b) `./gradlew clean assembleRelease`; (c) rename the output to match MinimaList's convention: `app/build/outputs/apk/release/app-release.apk` → `studfinder-v15-release.apk`; (d) **sanity-verify** the signing cert digest matches the expected `b800dcf0a7725e2f71987c40d979757acd328a23de2e93a7efc0e400aeb2db69` via `apksigner verify --print-certs studfinder-v15-release.apk` (the digest is pre-known because the same keystore signs MinimaList's F-Droid release — if it doesn't match, the keystore wiring is wrong, halt and debug). No fresh digest capture needed; reuse the MinimaList cert SHA-256 in Phase 5.1's YAML.
+- [ ] 4.7 [medium] **Publish the signed release APK as a GitHub Release** attached to tag `v15` at `github.com/toadlyBroodle/StudFinderAndroid/releases/tag/v15`. Filename: `studfinder-v15-release.apk` (matches MinimaList's `<app>-v%v-release.apk` convention so the `Binaries:` URL template in the fdroiddata YAML follows the same pattern). F-Droid's reproducible-builds verifier downloads this URL and byte-compares against its own reproduction.
+
+### Phase 5: F-Droid submission
+
+Mirror MinimaList's `docs/FDROID.md` checklist. Use the merge-request path (preferred over RFP queue: ~1-2 weeks vs months). Output of this phase: an MR open against `gitlab.com/fdroid/fdroiddata` adding `metadata/org.bitanon.studfinder.yml`.
+
+- [ ] 5.1 [medium] **Draft `metadata/org.bitanon.studfinder.yml`** locally at `docs/fdroid/org.bitanon.studfinder.yml` first, mirroring MinimaList's existing YAML at `~/Dev/MinimaList/docs/fdroid/*.yml`. Categories: `Tools` (or `System`). License field matches Phase 4.1 choice. `AuthorName: toadlyBroodle`. `SourceCode` + `IssueTracker` point at `github.com/toadlyBroodle/StudFinderAndroid`. `Builds` block references tag `v15`. `AutoUpdateMode: Version`, `UpdateCheckMode: Tags`, `UpdateCheckData: app/build.gradle|versionCode\s+([0-9]+)|.|v$1`. **Reproducible-build fields** (the whole reason we kept developer signing): `Binaries: https://github.com/toadlyBroodle/StudFinderAndroid/releases/download/v%v/studfinder-v%v-release.apk` (URL of the signed APK from Phase 4.7) and `AllowedAPKSigningKeys: b800dcf0a7725e2f71987c40d979757acd328a23de2e93a7efc0e400aeb2db69` (the shared toadlybroodle cert digest — pre-known from MinimaList's published YAML, no re-derivation needed). With both fields F-Droid attempts to reproduce + signature-verify; on match, F-Droid ships the developer-signed APK; on mismatch (typically from non-deterministic build artifacts), F-Droid falls back to building + signing with its own key (still shippable, just no signature continuity for that release — and a signal to investigate the determinism break).
+- [ ] 5.2 [easy] **Lint the YAML locally** with `pip install fdroidserver && fdroid lint docs/fdroid/org.bitanon.studfinder.yml`. Fix any schema errors before submission.
+- [ ] 5.3 [medium] **Fork `gitlab.com/fdroid/fdroiddata`, copy the linted YAML to `metadata/org.bitanon.studfinder.yml`, open a merge request.** MR description should cite the source repo, the strip phases as evidence of zero proprietary deps, and the `AntiFeatures: []` claim.
+- [ ] 5.4 [medium] **Respond to reviewer feedback** (24-72 hour expected turnaround). Common asks: license-text confirmation, anti-features clarification, build-config tweaks. Iterate on the MR until merged.
+- [ ] 5.5 [easy] **Confirm app appears in F-Droid index** (typically 24-48 hours after MR merge). Capture the F-Droid listing URL — needed for Phase 7.
+
+### Phase 6: Device testing & QA
+
+Before submitting to F-Droid (overlap with Phase 4-5 if useful), verify the stripped app actually works on a real device. The original app's value prop is sensor accuracy + responsiveness; regressions from the cloud-strip would be subtle (e.g. if any analytics call was inadvertently load-bearing on the activity-lifecycle path).
+
+- [ ] 6.1 [medium] **Install debug build on a real Android device** via `./gradlew installDebug` (USB debugging on). Smoke-test: app opens, magnetometer permission requested, detection works on a real wall, beeper plays, sensitivity slider adjusts threshold correctly.
+- [ ] 6.2 [medium] **Test the proper-usage flow end-to-end** (matches the on-site instructions): calibrate by moving a coin around the back of the device → red LEDs sequence; sweep along wall → red LEDs sequence over stud. Verify on at least two device models if available.
+- [ ] 6.3 [easy] **Verify offline operation.** Put device in airplane mode, launch app, confirm everything works. Confirms no surviving network call (also a contract requirement for the `AntiFeatures: []` declaration).
+- [ ] 6.4 [easy] **Run the release build** (`./gradlew assembleRelease` — will use the debug-signed default since release signing config was removed in 3.5) on device to catch any minify/proguard regressions.
+
+### Phase 7: Website integration (route traffic to F-Droid)
+
+Once the F-Droid listing is live, the website becomes the discovery layer that converts SEO traffic into F-Droid installs. Android visitors get the F-Droid badge as the primary CTA; iOS visitors get a "your platform doesn't have a free option — here's the PWA fallback (Phase 9) or buy a physical finder" path.
+
+- [ ] 7.1 [medium] **Add F-Droid badge as primary CTA above the fold** on `index.html`. Use the official `Get it on F-Droid` badge from `https://f-droid.org/badge/get-it-on.png`. Link to the F-Droid listing URL from Phase 5.5.
+- [ ] 7.2 [easy] **Add secondary "Build from source" / GitHub link** for users who want to sideload before F-Droid index rebuild propagates. Link to the GitHub releases page.
+- [ ] 7.3 [medium] **Add user-agent-based CTA routing** (vanilla JS, <20 lines): Android → F-Droid badge primary; iOS → PWA install + "or buy a physical finder" affiliate; desktop → both badges + "open on your phone to install" QR code.
+- [ ] 7.4 [easy] **Add a "Why open source / why F-Droid" section** explaining: no ads, no tracking, no Google Play Services, source on GitHub, community-rebuilt by F-Droid. Reinforces the differentiation vs the dozens of ad-laden stud finder apps in the Play Store.
+- [ ] 7.5 [easy] **Add Lightning donation address / Bitcoin tip jar** in the website footer + in-app "About" screen. Optional revenue stream that respects the free + open-source model; fits the user's other Bitcoin-related projects.
+
+### Phase 8: Content + SEO push (lift position 6.3 → top 3)
+
+Current position 6.3 on "stud finder app" captures maybe 5-8% of impressions; top-3 captures 30-50%. Closing that gap on the queries we already rank for is a 3-5× revenue multiplier on top of Phases 1+2 AND a 3-5× install multiplier for the F-Droid app. Each new guide page reinforces the F-Droid CTA + affiliate links.
+
+- [ ] 8.1 [medium] **Add 3-5 evergreen guide pages** (800-1500 words each) targeting our existing ranking queries: `/free-stud-finder-app/` ("free stud finder app" — 7,362 impressions, position 6.5), `/stud-finder-online/` ("stud finder online" — 901 impressions, position 4.2), `/best-stud-finder-app/` ("best stud finder app" — 5,547 impressions, position 9.5), `/iphone-stud-finder/` ("iphone stud finder" — 5,098 impressions, position 8.7 — this one routes to the PWA fallback since no F-Droid on iOS), `/stud-finder-vs-stud-detector/` (educational, broad). Each page features the F-Droid CTA + affiliate cards.
+- [ ] 8.2 [medium] **Add FAQ schema markup** to homepage. Cover: "do phone stud finder apps actually work", "is there a free stud finder app", "do stud finder apps work on iPhone", "what's the best open-source stud finder", "how do stud finder apps detect studs". JSON-LD format. Pulls featured-snippet placements.
+- [ ] 8.3 [easy] **Internal-link the guides from homepage** and resubmit updated sitemap to GSC. Internal-link reciprocally between guides.
+
+### Phase 9: PWA stud finder (iOS-only fallback)
+
+Demoted from "main product" to "iOS fallback" since the F-Droid app covers Android natively. Still worth building because (a) iOS Safari doesn't expose the Magnetometer API but does expose DeviceMotion (rough fallback), (b) ranks against iPhone-specific queries that the F-Droid path can't serve (4,385 impressions on "free stud finder app for iphone" alone), (c) one codebase to maintain regardless of Android.
+
+- [ ] 9.1 [medium] **Build PWA scaffold at `/app/`.** HTTPS-served, `manifest.json` (icons, theme, display:standalone), service worker for offline + install prompt. Vanilla JS, <50KB bundle.
+- [ ] 9.2 [hard] **Implement Magnetometer-based detection where available** (Android Chrome via Generic Sensor API; Android Firefox; some desktop). Calibration step, 5-sample rolling-mean smoothing, peak-detection threshold tuned for typical drywall+screw. UI mirrors the F-Droid app's LED-bar interaction — keep one mental model across surfaces.
+- [ ] 9.3 [medium] **iOS DeviceMotion fallback.** iOS Safari exposes `DeviceMotionEvent` with magnetometer-derived values via `iOS.requestPermission()`. Detect, request permission, smooth the signal, accept that accuracy is lower than the Android-Chrome path. Show an "iOS results vary — consider F-Droid on a borrowed Android, or grab a physical finder ↓" banner.
+- [ ] 9.4 [medium] **Port the usage instructions** into the PWA (currently inline in `index.html`).
+- [ ] 9.5 [easy] **Wire PWA analytics events.** Track PWA opened, calibration completed, detection events per session, install-to-home-screen.
+
+### Phase 10: Email list + cross-sell (compounding)
+
+A small email list of DIY-intent users is the highest-LTV asset. Even 500 subscribers, one affiliate-email per quarter, 20% open + 3% click + 5% conversion + $5 commission → ~$30/quarter passive. The list also becomes the launch channel for future toadlyBroodle projects.
+
+- [ ] 10.1 [medium] **Add lead magnet:** "Free printable stud-finding cheat sheet (PDF)." Email gate via Buttondown (recommended, $0 up to 100 subs then $9/mo) or ConvertKit free tier (up to 1k subs). One-page PDF covering spacing rules (16"/24" OC), what to do when finder fails, common mistakes.
+- [ ] 10.2 [medium] **Write 3-email welcome sequence:** (1) deliver cheat sheet, (2) "how to hang heavy things safely" + affiliate links to anchors rated for weight, (3) "tools every DIYer should own" + 8-10 affiliate-linked tool picks.
+
+## Deferred / out of scope
+
+- **Paid Pro tier in the app.** Incompatible with the open-source distribution: F-Droid won't accept paywalled features, anyone can recompile around a gate in published source, and a "free on F-Droid but paid elsewhere" schism splits the user base. Replaced by the Lightning donation jar in Phase 7.5. Revisit only if the donation jar consistently outperforms direct revenue from affiliate + ads — unlikely given the audience size.
+- **Re-listing native apps under new Apple / Google dev accounts.** Same suspension risk as before (Apple and Google fingerprint device + payment + address aggressively). The F-Droid path delivers the Android user value with zero gatekeeper exposure; iOS users get the PWA. Don't attempt unless F-Droid path proves blocked.
+- **Selling the domain on Flippa.** Worth more monetized than sold. Only revisit if Phases 1-9 fail to produce >$200/mo within 6 months.
+- **YouTube / TikTok content channel.** Real growth lever but a different skill commitment; revisit after the F-Droid debut + Phase 8 content land and the funnel converts at known rates.
+
+## Glossary (project-specific terms)
+
+- **F-Droid**: FOSS Android app catalog (`f-droid.org`). Builds and signs apps from source on its own build farm; no developer-account fees, no proprietary-dep allowance, no ads. Submission via merge request to `gitlab.com/fdroid/fdroiddata`.
+- **fdroiddata**: F-Droid's metadata repo. Each app has a YAML file at `metadata/<package-id>.yml` declaring source URL, license, build config, anti-features.
+- **Anti-features (F-Droid)**: Flags surfaced to users on listings — `Ads`, `Tracking`, `NonFreeNet`, `NonFreeAdd`, `NonFreeDep`, `NSFW`, `UpstreamNonFree`, `DisabledAlgorithm`, `KnownVuln`. Our goal: declare `AntiFeatures: []` (or omit) — zero of them.
+- **Magnetometer API**: Browser sensor API exposing raw 3-axis magnetic-field readings. Android Chrome behind HTTPS + permission. Not exposed by iOS Safari; iOS uses DeviceMotion as a rougher fallback.
+- **PWA (Progressive Web App)**: Installable web app, runs offline, accesses sensors. Bypasses app stores. iOS-fallback path only in this project.
+- **RPM (Revenue Per Mille)**: Ad-network revenue per 1,000 pageviews.
+- **OneLink (Amazon)**: Geo-routes affiliate links so a UK visitor lands on amazon.co.uk, etc., with commission still credited correctly.
+- **MinimaList workflow**: Reference implementation at `~/Dev/MinimaList/`; resurrected an abandoned 2018 Android app, stripped Firebase + AdMob + Google Sign-In + Play Billing, submitted to F-Droid. Studfinder2023's strip job mirrors MinimaList Phase 3 (smaller surface because source is intact — no decompile step needed) and its F-Droid submission mirrors MinimaList's `docs/FDROID.md`.
+- **Reproducible builds (F-Droid)**: distribution path where the developer signs the release APK with their own keystore, publishes it as a GitHub Release, and F-Droid's build server reproduces the exact APK bytes from source. If reproduction matches and the APK signature matches a cert digest in `AllowedAPKSigningKeys:`, F-Droid ships the developer-signed APK; otherwise F-Droid falls back to its own key. Requires deterministic build config (pinned Gradle / AGP / buildTools, no embedded timestamps). Studfinder uses this path so all toadlyBroodle F-Droid apps share one signing identity (the shared toadlybroodle keystore), matching the precedent set by MinimaList.
+- **`AllowedAPKSigningKeys:`**: fdroiddata YAML field listing SHA-256 cert digests F-Droid will accept when signature-verifying a developer-published APK referenced via `Binaries:`. Captured locally via `apksigner verify --print-certs <apk>` → "Signer #1 certificate SHA-256 digest".
+- **`Binaries:` (fdroiddata)**: YAML field with a URL template (`%v` = versionName, `%c` = versionCode) pointing at the developer-published signed APK. Required by the reproducible-builds-with-developer-signing path.
