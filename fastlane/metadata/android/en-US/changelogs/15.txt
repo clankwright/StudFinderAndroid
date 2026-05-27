@@ -1,0 +1,1 @@
+v2.0 — F-Droid debut. Removed AdMob, Firebase Analytics, Crashlytics, and Google Play Services. App is now fully offline: no INTERNET permission, no tracking, no ads. Upgraded to Gradle 8.7 / AGP 8.2.2 / Kotlin 1.9.20 for reproducible-build compatibility.

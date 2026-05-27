@@ -1,0 +1,17 @@
+StudFinder uses your Android phone's built-in magnetometer (compass sensor) to detect metal screws and nails inside wall studs. No paid subscription, no ads, no tracking — just a tool that works.
+
+How it works:
+Your phone's magnetometer measures the local magnetic field. Wood studs are held in place by metal fasteners (screws or nails) that disrupt the field. StudFinder reads that disruption and shows it on a live LED bar display, letting you sweep along the wall and pinpoint where studs are.
+
+How to use:
+1. Calibrate by moving a coin slowly around the back of your phone until the LED sequence completes.
+2. Hold the phone flat against the wall.
+3. Sweep slowly along the wall horizontally.
+4. The LEDs light up red when the magnetometer detects a metal fastener inside a stud.
+5. Mark the position and repeat to confirm the stud's width.
+
+Limitations:
+The magnetometer detects metal, not wood directly. It works reliably on standard wood-framed walls with metal screws or nails. Concrete walls, steel studs, or plaster-over-metal-lath surfaces give different results — consider a dedicated hardware stud finder for those.
+
+Open source and F-Droid:
+StudFinder is fully open-source (Apache 2.0) and distributed through F-Droid. Zero proprietary dependencies: no AdMob, no Firebase, no Google Play Services. The app requires no INTERNET permission and works entirely offline. Source code: github.com/toadlyBroodle/StudFinderAndroid
