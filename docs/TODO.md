@@ -23,6 +23,7 @@
 
 ## Next up (queued for next cycle)
 
+- [easy] [should-fix] 7.6 add `id="cta-ios"` and `id="cta-desktop"` div assertions to `docs/test_html.py:218` test_ua_routing_cta_divs_present — review of 52c8f24
 - [medium] Respond to F-Droid reviewer feedback on MR !39185 (https://gitlab.com/fdroid/fdroiddata/-/merge_requests/39185). Reason: SPEC 5.4. Monitor for reviewer comments; iterate on YAML or app repo config as needed.
 - [easy] Add Lightning donation address in website footer + in-app "About" screen link. Reason: SPEC 7.5. Independent of F-Droid merge; can ship now.
 - [medium] Add 4-6 affiliate product cards above the fold (Franklin ProSensor 710, Zircon HD55, magnetic, premium electronic) with UTM-tagged links + FTC disclosure. Reason: SPEC 1.3. Blocked on H1.1 (Amazon Associates signup in HUMAN.md).
