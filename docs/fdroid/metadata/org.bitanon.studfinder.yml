@@ -3,10 +3,14 @@ Categories:
 
 License: Apache-2.0
 AuthorName: toadlyBroodle
+WebSite: https://studfinderapp.com
 SourceCode: https://github.com/toadlyBroodle/StudFinderAndroid
 IssueTracker: https://github.com/toadlyBroodle/StudFinderAndroid/issues
 
 Name: Stud Finder
+
+RepoType: git
+Repo: https://github.com/toadlyBroodle/StudFinderAndroid
 
 AllowedAPKSigningKeys: e04d3854fc1245e27b826feaa30298bda89a4c0528a2a0b7ddbc23ad60a72fd4
 

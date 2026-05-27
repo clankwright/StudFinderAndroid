@@ -104,6 +104,28 @@ def test_fdroid_yaml_current_version(parsed):
     assert parsed.get("CurrentVersionCode") == 15
 
 
+# SPEC 5.4 — fields required for F-Droid build server and reviewer expectations
+
+def test_fdroid_yaml_repo_type(parsed):
+    assert parsed.get("RepoType") == "git", (
+        "RepoType must be 'git' — required for fdroid build server to clone the repo"
+    )
+
+
+def test_fdroid_yaml_repo_url(parsed):
+    repo = parsed.get("Repo", "")
+    assert repo == "https://github.com/toadlyBroodle/StudFinderAndroid", (
+        f"Repo must be the GitHub clone URL, got '{repo}'"
+    )
+
+
+def test_fdroid_yaml_website(parsed):
+    site = parsed.get("WebSite", "")
+    assert "studfinderapp.com" in site, (
+        f"WebSite should point to studfinderapp.com, got '{site}'"
+    )
+
+
 # SPEC 5.2 — fdroid lint passes
 
 def test_fdroid_lint_passes():
