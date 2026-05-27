@@ -18,6 +18,7 @@ PACKAGE_ID = "org.bitanon.studfinder"
 YAML_PATH_IN_REPO = f"metadata/{PACKAGE_ID}.yml"
 LOCAL_YAML = Path("/home/rob/Dev/android/Studfinder/docs/fdroid/metadata") / f"{PACKAGE_ID}.yml"
 GITHUB_URL = "https://github.com/toadlyBroodle/StudFinderAndroid"
+EXPECTED_SIGNING_KEY = "e04d3854fc1245e27b826feaa30298bda89a4c0528a2a0b7ddbc23ad60a72fd4"
 
 
 def _token() -> str:
@@ -113,4 +114,15 @@ def test_fdroid_mr_yaml_in_source_branch():
     )
     assert parsed.get("Repo") == GITHUB_URL, (
         f"Expected Repo '{GITHUB_URL}', got '{parsed.get('Repo')}'"
+    )
+    assert parsed.get("AllowedAPKSigningKeys") == EXPECTED_SIGNING_KEY, (
+        f"Expected AllowedAPKSigningKeys '{EXPECTED_SIGNING_KEY}', "
+        f"got '{parsed.get('AllowedAPKSigningKeys')}'"
+    )
+    binaries = parsed.get("Binaries", "")
+    assert "%c" in binaries, (
+        f"Binaries URL must use %c (versionCode), got: '{binaries}'"
+    )
+    assert "%v" not in binaries, (
+        f"Binaries URL must NOT use %v (resolves to versionName '2.0', not '15'), got: '{binaries}'"
     )

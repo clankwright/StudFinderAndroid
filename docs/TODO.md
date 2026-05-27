@@ -8,6 +8,7 @@
 
 ## Just shipped (last cycle)
 
+- 5.9: add AllowedAPKSigningKeys + Binaries %c assertions to test_fdroid_mr_yaml_in_source_branch; 62→62 tests pass — by sst-dev-cycle at 2026-05-27T23:30:00Z
 - 5.8: decode+parse YAML content from GitLab API in test_fdroid_mr_yaml_in_source_branch; assert RepoType='git' and Repo=GITHUB_URL — by sst-dev-cycle at 2026-05-27T22:00:00Z
 - 5.4 (proactive): added RepoType, Repo, WebSite to fdroid YAML; pushed to fork branch add-org.bitanon.studfinder; 3 new tests; 59→62 tests pass — by sst-dev-cycle at 2026-05-27T21:30:00Z
 - 7.6: extended test_ua_routing_cta_divs_present to assert cta-ios + cta-desktop divs; 59→59 tests pass — by sst-dev-cycle at 2026-05-27T14:05:00Z
@@ -26,7 +27,6 @@
 
 ## Next up (queued for next cycle)
 
-- [easy] [should-fix] 5.9 docs/test_fdroid_mr.py:test_fdroid_mr_yaml_in_source_branch — add AllowedAPKSigningKeys + Binaries %c assertions to fork-branch YAML content verification — review of 215748f
 - [medium] Respond to F-Droid reviewer feedback on MR !39185 (https://gitlab.com/fdroid/fdroiddata/-/merge_requests/39185). Reason: SPEC 5.4. Proactive YAML fix done (RepoType/Repo/WebSite added); MR still open awaiting reviewer — iterate on further feedback when it arrives.
 - [easy] Add Lightning donation address in website footer + in-app "About" screen link. Reason: SPEC 7.5. Blocked: need user's Lightning address (e.g. user@getalby.com or user@stacker.news) — not found in codebase; user must supply before this can ship.
 - [medium] Add 4-6 affiliate product cards above the fold (Franklin ProSensor 710, Zircon HD55, magnetic, premium electronic) with UTM-tagged links + FTC disclosure. Reason: SPEC 1.3. Blocked on H1.1 (Amazon Associates signup in HUMAN.md).
