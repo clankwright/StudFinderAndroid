@@ -26,6 +26,7 @@
 
 ## Next up (queued for next cycle)
 
+- [easy] [should-fix] 5.9 docs/test_fdroid_mr.py:test_fdroid_mr_yaml_in_source_branch — add AllowedAPKSigningKeys + Binaries %c assertions to fork-branch YAML content verification — review of 215748f
 - [medium] Respond to F-Droid reviewer feedback on MR !39185 (https://gitlab.com/fdroid/fdroiddata/-/merge_requests/39185). Reason: SPEC 5.4. Proactive YAML fix done (RepoType/Repo/WebSite added); MR still open awaiting reviewer — iterate on further feedback when it arrives.
 - [easy] Add Lightning donation address in website footer + in-app "About" screen link. Reason: SPEC 7.5. Blocked: need user's Lightning address (e.g. user@getalby.com or user@stacker.news) — not found in codebase; user must supply before this can ship.
 - [medium] Add 4-6 affiliate product cards above the fold (Franklin ProSensor 710, Zircon HD55, magnetic, premium electronic) with UTM-tagged links + FTC disclosure. Reason: SPEC 1.3. Blocked on H1.1 (Amazon Associates signup in HUMAN.md).
