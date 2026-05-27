@@ -56,6 +56,18 @@ check ".gitignore covers *.apk" grep -q "\*\.apk" "$ROOT/.gitignore"
 check_absent "app/release.keystore.properties not tracked by git" \
     git -C "$ROOT" ls-files --error-unmatch "app/release.keystore.properties"
 
+# 3.8a: storeFile must NOT use rootProject.file("app/" + ...) — breaks absolute paths
+check_absent "storeFile does not use rootProject.file(\"app/\" + ...) concatenation" \
+    grep -qE 'rootProject\.file\("app/" \+' "$ROOT/app/build.gradle"
+
+# 3.8b: storeFile must use file() so absolute and relative paths both resolve correctly
+check "storeFile uses file() for absolute/relative path resolution" \
+    grep -qE "storeFile file\(" "$ROOT/app/build.gradle"
+
+# 3.8c: REMOVED-CLOUD-SURFACE.md documents the correct storeFile format
+check "REMOVED-CLOUD-SURFACE.md documents file() storeFile format" \
+    grep -q "file(storeFile)" "$ROOT/docs/REMOVED-CLOUD-SURFACE.md"
+
 echo ""
 echo "Signing config: $PASS passed, $FAIL failed"
 [ "$FAIL" -eq 0 ]

@@ -8,6 +8,7 @@
 
 ## Just shipped (last cycle)
 
+- SPEC 3.8: replaced storeFile rootProject.file("app/" + ...) with file() in app/build.gradle; documented correct storeFile format in REMOVED-CLOUD-SURFACE.md; 16 → 26 tests pass — by sst-dev-cycle at 2026-05-27T15:10:00Z
 - SPEC 3.5+3.6+3.7: rewired app/build.gradle signing to shared toadlybroodle keystore (gated on app/release.keystore.properties existence), extended .gitignore (*.jks/*.keystore/*.keystore.properties/*.apk), created docs/REMOVED-CLOUD-SURFACE.md, all 16 cloud-strip + 7 signing-config checks pass, assembleDebug BUILD SUCCESSFUL with JDK 17 pin in gradle.properties — by sst-dev-cycle at 2026-05-27T08:00:00Z
 - SPEC 3.1+3.2+3.3+3.4: deleted AdMob.kt + Firebase.kt, stripped all call sites from StudFActivity.kt + StudFView.kt, removed Firebase/AdMob plugins and deps from build.gradle, deleted google-services.json, removed INTERNET/ACCESS_NETWORK_STATE permissions and all GMS meta-data from manifest; all 16 strip-audit checks pass; `./gradlew clean assembleDebug` succeeds — by sst-dev-cycle at 2026-05-27T06:00:00Z
 - SPEC 0.4+0.5: added Plausible analytics (outbound-links extension, F-Droid-badge-click event, stub fn) to index.html; updated sitemap.xml lastmod to 2026-05-27; deployed to VPS; GSC ownership confirmed via DNS TXT record — by sst-dev-cycle at 2026-05-27T05:00:00Z
@@ -20,7 +21,6 @@
 
 ## Next up (queued for next cycle)
 
-- [easy] [should-fix] 3.8 fix `app/build.gradle:17` storeFile path: replace `rootProject.file("app/" + storeFile)` with `file(storeFile)` so absolute keystore paths work; update `REMOVED-CLOUD-SURFACE.md` with correct storeFile format — review of 7463e01
 - [easy] [should-fix] 3.9 when SPEC 4.3 runs: remove `gradle.properties` `org.gradle.java.home` machine-specific JDK path and upgrade Gradle wrapper to 8.x+ (Java-21-compatible) so F-Droid's build server doesn't fail — review of 7463e01
 - [medium] Build + sign release APK with shared keystore; rename to `studfinder-v15-release.apk`; sanity-verify signing cert SHA-256 matches the pre-known `b800dcf0a7725e2f71987c40d979757acd328a23de2e93a7efc0e400aeb2db69`. Reason: SPEC 4.6 — verifies the keystore wiring is correct and produces the digest the fdroiddata YAML already expects.
 - [medium] Publish `studfinder-v15-release.apk` as GitHub Release artifact attached to tag `v15`. Reason: SPEC 4.7 — F-Droid `Binaries:` URL target.

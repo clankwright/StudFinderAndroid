@@ -13,7 +13,7 @@ android {
     if (!releaseKeystoreProps.isEmpty()) {
         signingConfigs {
             release {
-                storeFile rootProject.file("app/" + releaseKeystoreProps['storeFile'])
+                storeFile file(releaseKeystoreProps['storeFile'])
                 storePassword releaseKeystoreProps['storePassword']
                 keyAlias releaseKeystoreProps['keyAlias']
                 keyPassword releaseKeystoreProps['keyPassword']

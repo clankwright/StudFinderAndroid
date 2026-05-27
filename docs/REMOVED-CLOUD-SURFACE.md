@@ -48,6 +48,8 @@ Replaced the old `extras/key-signing/keyStoreCreds.properties` signing config wi
 
 The signing block in `app/build.gradle` is gated on `app/release.keystore.properties` existence so contributors without the keystore can still run `./gradlew assembleDebug` without error.
 
+**`storeFile` format**: `app/release.keystore.properties` must set `storeFile` to the keystore path. Both absolute paths (e.g. `/home/rob/Dev/dev-creds/toadlybroodleKeyStore.jks`) and paths relative to the `app/` module directory (e.g. `../dev-creds/toadlybroodleKeyStore.jks`) work — `app/build.gradle` resolves the value with `file(storeFile)`, which handles absolute paths correctly. The old `rootProject.file("app/" + storeFile)` pattern (Phase 3.5 original) only accepted relative paths and silently broke for absolute paths.
+
 Trade-off: breaks signature continuity for any device with a prior Play Store sideload of `org.bitanon.studfinder` (Play Store listing is suspended — no active install funnel). Gains consistency across toadlyBroodle's F-Droid catalog; the pre-known cert digest is already referenced in the fdroiddata YAML (`AllowedAPKSigningKeys:`).
 
 The legacy `extras/key-signing/` directory (original 2022 Studfinder cert + `keyStoreCreds.properties`) is left in place — gitignored, harmless archive in case signature continuity is ever wanted.
