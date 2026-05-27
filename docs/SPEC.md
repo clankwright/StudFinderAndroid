@@ -112,7 +112,7 @@ Once the F-Droid listing is live, the website becomes the discovery layer that c
 - [ ] 7.5 [easy] **Add Lightning donation address / Bitcoin tip jar** in the website footer + in-app "About" screen. Optional revenue stream that respects the free + open-source model; fits the user's other Bitcoin-related projects.
 
 **Review follow-ups (open — schedule as the next `/sst-dev-cycle` cycle):**
-- [ ] 7.6 [easy] [should-fix] `docs/test_html.py:218` — `test_ua_routing_cta_divs_present` only checks for `id="cta-android"`; `cta-ios` and `cta-desktop` are never asserted present. The routing script calls `document.getElementById('cta-ios').style.display = 'block'` and `document.getElementById('cta-desktop').style.display = 'block'` without null guards (`index.html:189,192`), so a removed div causes a `TypeError` for iOS and desktop visitors with no test catching the regression. Proposed fix: extend `test_ua_routing_cta_divs_present` (or add sibling tests) to assert all three `id="cta-android"`, `id="cta-ios"`, and `id="cta-desktop"` divs are present in `index.html`.
+- [x] 7.6 [easy] [should-fix] `docs/test_html.py:218` — extended `test_ua_routing_cta_divs_present` to assert all three `id="cta-android"`, `id="cta-ios"`, and `id="cta-desktop"` divs are present; updated docstring to explain the null-guard risk. 59→59 tests pass (assertions strengthened within existing function).
 
 ### Phase 8: Content + SEO push (lift position 6.3 → top 3)
 

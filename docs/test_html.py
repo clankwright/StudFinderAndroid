@@ -213,8 +213,18 @@ def test_ua_routing_detects_ios():
 
 
 def test_ua_routing_cta_divs_present():
-    """HTML must contain separate CTA containers for Android and non-Android visitors (SPEC 7.3)."""
+    """All three UA-routed CTA divs must be present in HTML (SPEC 7.3/7.6).
+
+    The routing IIFE calls getElementById on all three without null guards, so a
+    missing div causes a TypeError for affected visitors with no prior test catch.
+    """
     html = read_html()
-    assert "cta-android" in html or "id=\"android" in html or "class=\"android" in html, (
-        "No Android-specific CTA container (id/class containing 'android') found — SPEC 7.3"
+    assert 'id="cta-android"' in html, (
+        'Android CTA container (id="cta-android") missing — SPEC 7.3/7.6'
+    )
+    assert 'id="cta-ios"' in html, (
+        'iOS CTA container (id="cta-ios") missing — SPEC 7.3/7.6; JS calls getElementById("cta-ios") without null guard'
+    )
+    assert 'id="cta-desktop"' in html, (
+        'Desktop CTA container (id="cta-desktop") missing — SPEC 7.3/7.6; JS calls getElementById("cta-desktop") without null guard'
     )
