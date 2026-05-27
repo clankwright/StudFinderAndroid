@@ -250,12 +250,28 @@ def test_donate_lightning_content_present():
 
 
 def test_donate_lightning_address_displayed():
-    """Donation section must display a Lightning address in user@domain format (SPEC 7.5)."""
+    """Donation section must display a Lightning address in user@domain format (SPEC 7.5).
+    Scoped to the donate section with HTML comments stripped so a comment-only address
+    cannot produce a false positive (SPEC 7.7).
+    """
     import re
     html = read_html()
     donate_idx = html.lower().find("donate")
     assert donate_idx != -1, "No donate section found — SPEC 7.5"
-    # address must appear somewhere on the page (not just in a link href attribute hidden from view)
-    assert re.search(r'[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}', html), (
-        "No Lightning address (user@domain) displayed on page — SPEC 7.5"
+    donate_html = re.sub(r'<!--.*?-->', '', html[donate_idx:], flags=re.DOTALL)
+    assert re.search(r'[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}', donate_html), (
+        "No Lightning address (user@domain) in donate section (outside HTML comments) — SPEC 7.5"
+    )
+
+
+def test_donate_address_comment_only_is_rejected():
+    """Comment-stripping guard: email that exists only inside an HTML comment must not pass
+    the address check (guards the false-positive path described in SPEC 7.7)."""
+    import re
+    # email is inside a comment within the donate section — not visible to users
+    mock_html = '<section id="donate"><!-- user@example.com --> no visible address</section>'
+    donate_idx = mock_html.lower().find("donate")
+    donate_html = re.sub(r'<!--.*?-->', '', mock_html[donate_idx:], flags=re.DOTALL)
+    assert not re.search(r'[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}', donate_html), (
+        "Comment-only email passed the address check — comment stripping not working"
     )

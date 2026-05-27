@@ -8,6 +8,7 @@
 
 ## Just shipped (last cycle)
 
+- 7.7: fix test_donate_lightning_address_displayed to strip HTML comments + scope to donate section; add comment-only rejection guard; 70→71 tests pass — by sst-dev-cycle at 2026-05-28T10:00:00Z
 - 7.5: Lightning donation footer (website #donate section + lightning: link) + donate button in app Instructions dialog; 64→70 tests pass — by sst-dev-cycle at 2026-05-28T09:30:00Z
 - 5.4: address linsui MR !39185 change requests (full commit SHA, subdir: app, delete UpdateCheckData); push to fork branch; 62→64 tests pass — by sst-dev-cycle at 2026-05-28T07:15:00Z
 - 5.9: add AllowedAPKSigningKeys + Binaries %c assertions to test_fdroid_mr_yaml_in_source_branch; 62→62 tests pass — by sst-dev-cycle at 2026-05-27T23:30:00Z
@@ -21,6 +22,5 @@
 
 ## Next up (queued for next cycle)
 
-- [easy] [should-fix] 7.7 `docs/test_html.py:259` — scope email regex to donate section and strip HTML comments to close false-positive path — review of 72e88a5
 - [medium] Add 4-6 affiliate product cards above the fold (Franklin ProSensor 710, Zircon HD55, magnetic, premium electronic) with UTM-tagged links + FTC disclosure. Reason: SPEC 1.3. Blocked on H1.1 (Amazon Associates signup in HUMAN.md).
 - [medium] Smoke-test studfinder-v15-release.apk on a connected Android device via adb: `adb install -r app/build/outputs/apk/release/studfinder-v15-release.apk` (or pull from GitHub Release v15), then drive through `adb shell am start`/`input` to exercise launch → instructions screen → sensor-sweep activity → settings; assert (a) `adb logcat` contains no `AdMob`, `FirebaseApp`, or `GoogleAnalytics` lines during the run (greppable allowlist), (b) `dumpsys netstats detail` shows zero bytes for `org.bitanon.studfinder` over the run, (c) exit code 0 from `adb shell am force-stop`. Write a new `test_device_smoke.py` that runs against `ADB_SERIAL` env var (skip if unset so CI without a device stays green) and record outcome under a new SPEC 4.10 (file the sub-item when picking). Reason: gates F-Droid acceptance + verifies the Phase-3 strip on real hardware; emulator cannot exercise magnetometer/haptic. Requires a phone connected to the chain host via USB-debugging before this is picked.
