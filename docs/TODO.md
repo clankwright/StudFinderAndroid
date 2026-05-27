@@ -8,6 +8,7 @@
 
 ## Just shipped (last cycle)
 
+- 6.1+6.3+6.4+6.5: device smoke-test on OnePlus CPH2647 (Android 16); install via /data/local/tmp, launch StudFActivity, force-stop; logcat allowlist clean (0 AdMob/Firebase/Crashlytics/GoogleAnalytics/gms.ads/ca-app-pub hits across 29k lines); netstats UID 10408 absent (zero bytes); airplane-mode relaunch clean; Phase 7.5 SUPPORT button confirmed firing ACTION_VIEW to studfinderapp.com/#donate (Brave opened the page); new docs/test_device_smoke.py (5 tests, ADB_SERIAL-gated); 71→76 tests pass with device / 71+5 skipped without — by manual (direct on-device session) at 2026-05-28T20:30:00Z
 - 7.7: fix test_donate_lightning_address_displayed to strip HTML comments + scope to donate section; add comment-only rejection guard; 70→71 tests pass — by sst-dev-cycle at 2026-05-28T10:00:00Z
 - 7.5: Lightning donation footer (website #donate section + lightning: link) + donate button in app Instructions dialog; 64→70 tests pass — by sst-dev-cycle at 2026-05-28T09:30:00Z
 - 5.4: address linsui MR !39185 change requests (full commit SHA, subdir: app, delete UpdateCheckData); push to fork branch; 62→64 tests pass — by sst-dev-cycle at 2026-05-28T07:15:00Z
@@ -18,9 +19,7 @@
 - 7.1+7.2+7.3+7.4: F-Droid badge (primary CTA), GitHub sideload link, UA routing (Android/iOS/desktop divs + navigator.userAgent IIFE), "why open source" marked complete; 8 new tests in test_html.py; 51→59 tests pass — by sst-dev-cycle at 2026-05-27T12:30:00Z
 - 5.3: created branch add-org.bitanon.studfinder in fork, added YAML via GitLab API, opened MR !39185 to fdroid/fdroiddata; 5 new tests in test_fdroid_mr.py; 46→51 tests pass — by sst-dev-cycle at 2026-05-27T10:30:00Z
 - 4.9: replace apksigner verify body with aapt dump badging + assert versionCode='15' in test_release_apk_versioncode_15; 46→46 tests pass — by sst-dev-cycle at 2026-05-28T00:00:00Z
-- SPEC 4.6+4.7: built+signed release APK (assembleRelease with toadlybroodleKeyStore.jks); discovered actual cert SHA-256 e04d3854... (differs from MinimaList's older cert); corrected YAML + SPEC + tests; published studfinder-v15-release.apk to GitHub Release v15; 41→46 tests pass — by sst-dev-cycle at 2026-05-27T23:30:00Z
 
 ## Next up (queued for next cycle)
 
 - [medium] Add 4-6 affiliate product cards above the fold (Franklin ProSensor 710, Zircon HD55, magnetic, premium electronic) with UTM-tagged links + FTC disclosure. Reason: SPEC 1.3. Blocked on H1.1 (Amazon Associates signup in HUMAN.md).
-- [medium] Smoke-test studfinder-v15-release.apk on a connected Android device via adb: `adb install -r app/build/outputs/apk/release/studfinder-v15-release.apk` (or pull from GitHub Release v15), then drive through `adb shell am start`/`input` to exercise launch → instructions screen → sensor-sweep activity → settings; assert (a) `adb logcat` contains no `AdMob`, `FirebaseApp`, or `GoogleAnalytics` lines during the run (greppable allowlist), (b) `dumpsys netstats detail` shows zero bytes for `org.bitanon.studfinder` over the run, (c) exit code 0 from `adb shell am force-stop`. Write a new `test_device_smoke.py` that runs against `ADB_SERIAL` env var (skip if unset so CI without a device stays green) and record outcome under a new SPEC 4.10 (file the sub-item when picking). Reason: gates F-Droid acceptance + verifies the Phase-3 strip on real hardware; emulator cannot exercise magnetometer/haptic. Requires a phone connected to the chain host via USB-debugging before this is picked.
