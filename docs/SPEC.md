@@ -76,7 +76,7 @@ Mirror MinimaList's Phase 15 prep. F-Droid requires a recognized FOSS license, r
 
 **Review follow-ups (open — schedule as the next `/sst-dev-cycle` cycle):**
 - [x] 4.8 [easy] [should-fix] `docs/test_fdroid.py:test_tag_v15_points_to_head` — test always fails: v15 was tagged at `8bb5dd2` before the fastlane metadata commit advanced HEAD to `9547a9bf`, so `tag_sha == head_sha` is permanently false and the suite ships with 1 failing test. Proposed fix: replace the `==` assertion with `assert subprocess.run(["git","merge-base","--is-ancestor","v15^{}","HEAD"], cwd=str(REPO)).returncode == 0` — the real contract is that v15 is a reachable ancestor of master, not equal to HEAD.
-- [ ] 4.9 [easy] [should-fix] `docs/test_release.py:test_release_apk_versioncode_15` — test name/docstring claim versionCode 15 verification, but the body only runs `apksigner verify --verbose` and checks exit code 0; `apksigner` reports signature info, not APK metadata, so the wrong versionCode would pass this test silently. If the APK were rebuilt with versionCode 14, all 5 tests pass, but F-Droid's build server would reject it when its `Builds: versionCode: 15` doesn't match. Proposed fix: add `AAPT = "/home/rob/Android/Sdk/build-tools/34.0.0/aapt"` constant and replace the body with `aapt dump badging studfinder-v15-release.apk` + assert `"versionCode='15'"` in the output.
+- [x] 4.9 [easy] [should-fix] `docs/test_release.py:test_release_apk_versioncode_15` — replaced `apksigner verify --verbose` (only checked exit code) with `aapt dump badging` + assert `"versionCode='15'"` in output; added `AAPT` constant alongside `APKSIGNER`. A rebuild with versionCode 14 would now fail the test, closing the silent-false-pass gap. 46→46 tests pass.
 
 ### Phase 5: F-Droid submission
 

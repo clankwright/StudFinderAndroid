@@ -6,6 +6,7 @@ from pathlib import Path
 REPO = Path("/home/rob/Dev/android/Studfinder")
 APK_PATH = REPO / "studfinder-v15-release.apk"
 APKSIGNER = "/home/rob/Android/Sdk/build-tools/34.0.0/apksigner"
+AAPT = "/home/rob/Android/Sdk/build-tools/34.0.0/aapt"
 EXPECTED_CERT_SHA256 = "e04d3854fc1245e27b826feaa30298bda89a4c0528a2a0b7ddbc23ad60a72fd4"
 GITHUB_REPO = "toadlyBroodle/StudFinderAndroid"
 RELEASE_TAG = "v15"
@@ -36,10 +37,12 @@ def test_release_apk_versioncode_15():
     """APK must carry versionCode 15 (the F-Droid debut version)."""
     assert APK_PATH.exists(), f"APK not found; build it first (SPEC 4.6)"
     result = subprocess.run(
-        [APKSIGNER, "verify", "--verbose", str(APK_PATH)],
+        [AAPT, "dump", "badging", str(APK_PATH)],
         capture_output=True, text=True, check=True,
     )
-    assert result.returncode == 0, f"apksigner verify failed: {result.stderr}"
+    assert "versionCode='15'" in result.stdout, (
+        f"Expected versionCode='15' in aapt dump badging output:\n{result.stdout[:500]}"
+    )
 
 
 # SPEC 4.7 — GitHub Release
