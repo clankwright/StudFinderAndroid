@@ -8,6 +8,7 @@
 
 ## Just shipped (last cycle)
 
+- 5.3: created branch add-org.bitanon.studfinder in fork, added YAML via GitLab API, opened MR !39185 to fdroid/fdroiddata; 5 new tests in test_fdroid_mr.py; 46→51 tests pass — by sst-dev-cycle at 2026-05-27T10:30:00Z
 - 4.9: replace apksigner verify body with aapt dump badging + assert versionCode='15' in test_release_apk_versioncode_15; 46→46 tests pass — by sst-dev-cycle at 2026-05-28T00:00:00Z
 - SPEC 4.6+4.7: built+signed release APK (assembleRelease with toadlybroodleKeyStore.jks); discovered actual cert SHA-256 e04d3854... (differs from MinimaList's older cert); corrected YAML + SPEC + tests; published studfinder-v15-release.apk to GitHub Release v15; 41→46 tests pass — by sst-dev-cycle at 2026-05-27T23:30:00Z
 - SPEC 5.7: fix stale %v→%c in SPEC.md 4.7 parenthetical + 5.1 Binaries URL description; 41→41 tests pass — by sst-dev-cycle at 2026-05-27T23:00:00Z
@@ -21,6 +22,6 @@
 
 ## Next up (queued for next cycle)
 
-- [easy] Sign up for Amazon Associates (US + OneLink for UK/CA/AU). Reason: SPEC 1.2.
-- [medium] Add 4-6 affiliate product cards above the fold (Franklin ProSensor 710, Zircon HD55, magnetic, premium electronic) with UTM-tagged links + FTC disclosure. Reason: SPEC 1.3.
-- [medium] Fork gitlab.com/fdroid/fdroiddata, copy linted YAML to metadata/org.bitanon.studfinder.yml, open MR. Reason: SPEC 5.3 — now unblocked since GitHub Release v15 + APK exist.
+- [easy] Sign up for Amazon Associates (US + OneLink for UK/CA/AU). Reason: SPEC 1.2. Note: human-only external account signup — requires user action at associate-central.amazon.com.
+- [medium] Add 4-6 affiliate product cards above the fold (Franklin ProSensor 710, Zircon HD55, magnetic, premium electronic) with UTM-tagged links + FTC disclosure. Reason: SPEC 1.3. Blocked on SPEC 1.2 (needs actual affiliate tag).
+- [medium] Respond to F-Droid reviewer feedback on MR !39185 (https://gitlab.com/fdroid/fdroiddata/-/merge_requests/39185). Reason: SPEC 5.4. Monitor for reviewer comments; iterate on YAML or app repo config as needed.
