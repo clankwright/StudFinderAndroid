@@ -74,8 +74,51 @@ def test_fdroid_yaml_builds_block(parsed):
     assert len(builds) >= 1, "Builds block required"
     build = builds[0]
     assert build.get("versionCode") == 15, f"versionCode must be 15, got {build.get('versionCode')}"
-    assert build.get("commit") == "v15", f"commit must be v15, got {build.get('commit')}"
     assert "release" in (build.get("gradle") or []), "gradle must include 'release'"
+
+
+def test_fdroid_yaml_builds_commit_is_full_sha(parsed):
+    """commit: must be the full 40-hex SHA of v15^{}, not the tag name 'v15'.
+
+    F-Droid reviewer linsui's change request: tag names in commit: are ambiguous
+    in reproducible-builds mode; the full dereferenced commit SHA is required.
+    Expected: 8bb5dd2934725584c30d002cea38314cc7d54c92
+    """
+    import re
+    builds = parsed.get("Builds", [])
+    assert builds, "Builds block required"
+    commit = builds[0].get("commit", "")
+    assert re.match(r"^[0-9a-f]{40}$", commit), (
+        f"commit must be a 40-hex SHA, got '{commit}' — use the dereferenced SHA of v15^{{}}"
+    )
+    assert commit != "v15", "commit must NOT be the tag name 'v15'; use the full SHA"
+
+
+def test_fdroid_yaml_builds_subdir_is_app(parsed):
+    """Builds[0] must declare subdir: app — the Android module lives under app/.
+
+    F-Droid reviewer linsui's change request: without subdir, the build server
+    searches from the repo root and fails to locate the Gradle module.
+    """
+    builds = parsed.get("Builds", [])
+    assert builds, "Builds block required"
+    subdir = builds[0].get("subdir")
+    assert subdir == "app", (
+        f"Builds[0].subdir must be 'app', got '{subdir}'"
+    )
+
+
+def test_fdroid_yaml_no_update_check_data(parsed):
+    """UpdateCheckData must NOT be present when UpdateCheckMode is Tags.
+
+    F-Droid reviewer linsui's inline suggestion (empty-replacement delete):
+    UpdateCheckMode: Tags is self-contained; adding UpdateCheckData alongside it
+    is redundant and can cause the auto-update bot to misparse version detection.
+    """
+    assert "UpdateCheckData" not in parsed, (
+        "UpdateCheckData must be deleted — reviewer requested removal; "
+        "UpdateCheckMode: Tags does not require it"
+    )
 
 
 def test_fdroid_yaml_no_antifeatures(parsed):
@@ -92,11 +135,6 @@ def test_fdroid_yaml_auto_update_mode(parsed):
 def test_fdroid_yaml_update_check_mode(parsed):
     assert parsed.get("UpdateCheckMode") == "Tags"
 
-
-def test_fdroid_yaml_update_check_data(parsed):
-    ucd = parsed.get("UpdateCheckData", "")
-    assert "app/build.gradle" in ucd, "UpdateCheckData must reference app/build.gradle"
-    assert "versionCode" in ucd
 
 
 def test_fdroid_yaml_current_version(parsed):

@@ -19,12 +19,12 @@ Binaries: https://github.com/toadlyBroodle/StudFinderAndroid/releases/download/v
 Builds:
   - versionName: "2.0"
     versionCode: 15
-    commit: v15
+    commit: 8bb5dd2934725584c30d002cea38314cc7d54c92
+    subdir: app
     gradle:
       - release
 
 AutoUpdateMode: Version
 UpdateCheckMode: Tags
-UpdateCheckData: app/build.gradle|versionCode\s+([0-9]+)|.|v$1
 CurrentVersion: "2.0"
 CurrentVersionCode: 15

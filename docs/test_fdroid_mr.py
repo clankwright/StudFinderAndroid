@@ -126,3 +126,21 @@ def test_fdroid_mr_yaml_in_source_branch():
     assert "%v" not in binaries, (
         f"Binaries URL must NOT use %v (resolves to versionName '2.0', not '15'), got: '{binaries}'"
     )
+    # SPEC 5.4 — linsui reviewer change requests
+    import re
+    builds = parsed.get("Builds", [])
+    assert builds, "Builds block required in fork branch YAML"
+    commit = builds[0].get("commit", "")
+    assert re.match(r"^[0-9a-f]{40}$", commit), (
+        f"Builds[0].commit must be a full 40-hex SHA (not a tag name), got '{commit}'"
+    )
+    assert commit != "v15", (
+        "Builds[0].commit must NOT be the tag name 'v15' in the fork branch YAML"
+    )
+    subdir = builds[0].get("subdir")
+    assert subdir == "app", (
+        f"Builds[0].subdir must be 'app', got '{subdir}'"
+    )
+    assert "UpdateCheckData" not in parsed, (
+        "UpdateCheckData must be absent from fork branch YAML — reviewer deletion request"
+    )
