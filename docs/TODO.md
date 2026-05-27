@@ -8,6 +8,7 @@
 
 ## Just shipped (last cycle)
 
+- SPEC 4.8: replace tag_sha==head_sha with ancestor check in test_tag_v15_points_to_head; 20→21 tests pass — by sst-dev-cycle at 2026-05-27T19:00:00Z
 - SPEC 4.5+4.2: created annotated git tag v15 at HEAD; fastlane metadata (title, short/full description, changelog/15.txt, 512×512 icon upscaled from xxxhdpi); phoneScreenshots/ dir created; 11→21 tests pass — by sst-dev-cycle at 2026-05-27T18:30:00Z
 - SPEC 4.1+3.9+4.3+4.4: added Apache-2.0 LICENSE + README.md; removed org.gradle.java.home; upgraded Gradle 7.4→8.7 + AGP 7.3.1→8.2.2 + Kotlin 1.7.20→1.9.20; pinned buildToolsVersion "33.0.2"; bumped versionCode 14→15, versionName "1.13"→"2.0"; assembleDebug BUILD SUCCESSFUL with Java 21; 26→36 tests pass — by sst-dev-cycle at 2026-05-27T17:00:00Z
 - SPEC 3.8: replaced storeFile rootProject.file("app/" + ...) with file() in app/build.gradle; documented correct storeFile format in REMOVED-CLOUD-SURFACE.md; 16 → 26 tests pass — by sst-dev-cycle at 2026-05-27T15:10:00Z
@@ -23,7 +24,6 @@
 
 ## Next up (queued for next cycle)
 
-- [easy] [should-fix] 4.8 `docs/test_fdroid.py:test_tag_v15_points_to_head` — replace `tag_sha == head_sha` with ancestor check; v15 predates fastlane commit, test always fails — review of 9547a9b
 - [medium] Build + sign release APK with shared keystore; rename to `studfinder-v15-release.apk`; sanity-verify signing cert SHA-256 matches the pre-known `b800dcf0a7725e2f71987c40d979757acd328a23de2e93a7efc0e400aeb2db69`. Reason: SPEC 4.6. BLOCKER: requires `app/release.keystore.properties` to exist with storeFile/storePassword/keyAlias/keyPassword for `~/Dev/dev-creds/toadlybroodleKeyStore.jks`. Create this file (gitignored) before running this cycle.
 - [medium] Publish `studfinder-v15-release.apk` as GitHub Release artifact attached to tag `v15`. Reason: SPEC 4.7 — F-Droid `Binaries:` URL target. Depends on 4.6.
 - [medium] Rewrite landing-page copy: lead with the F-Droid open-source app + physical-tools angle. Reason: SPEC 1.1 — kicks off the affiliate pivot in parallel with F-Droid prep.

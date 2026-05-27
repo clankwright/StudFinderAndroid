@@ -75,7 +75,7 @@ Mirror MinimaList's Phase 15 prep. F-Droid requires a recognized FOSS license, r
 - [ ] 4.7 [medium] **Publish the signed release APK as a GitHub Release** attached to tag `v15` at `github.com/toadlyBroodle/StudFinderAndroid/releases/tag/v15`. Filename: `studfinder-v15-release.apk` (matches MinimaList's `<app>-v%v-release.apk` convention so the `Binaries:` URL template in the fdroiddata YAML follows the same pattern). F-Droid's reproducible-builds verifier downloads this URL and byte-compares against its own reproduction.
 
 **Review follow-ups (open — schedule as the next `/sst-dev-cycle` cycle):**
-- [ ] 4.8 [easy] [should-fix] `docs/test_fdroid.py:test_tag_v15_points_to_head` — test always fails: v15 was tagged at `8bb5dd2` before the fastlane metadata commit advanced HEAD to `9547a9bf`, so `tag_sha == head_sha` is permanently false and the suite ships with 1 failing test. Proposed fix: replace the `==` assertion with `assert subprocess.run(["git","merge-base","--is-ancestor","v15^{}","HEAD"], cwd=str(REPO)).returncode == 0` — the real contract is that v15 is a reachable ancestor of master, not equal to HEAD.
+- [x] 4.8 [easy] [should-fix] `docs/test_fdroid.py:test_tag_v15_points_to_head` — test always fails: v15 was tagged at `8bb5dd2` before the fastlane metadata commit advanced HEAD to `9547a9bf`, so `tag_sha == head_sha` is permanently false and the suite ships with 1 failing test. Proposed fix: replace the `==` assertion with `assert subprocess.run(["git","merge-base","--is-ancestor","v15^{}","HEAD"], cwd=str(REPO)).returncode == 0` — the real contract is that v15 is a reachable ancestor of master, not equal to HEAD.
 
 ### Phase 5: F-Droid submission
 
