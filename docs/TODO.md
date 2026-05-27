@@ -26,6 +26,7 @@
 
 ## Next up (queued for next cycle)
 
+- [easy] [should-fix] 5.6 `docs/fdroid/metadata/org.bitanon.studfinder.yml:13` — fix Binaries: replace %v with %c to match versionCode-based tag v15 convention; update docs/test_fdroid_yaml.py:66 to assert %c — review of 42ac294
 - [medium] Build + sign release APK with shared keystore; rename to `studfinder-v15-release.apk`; sanity-verify signing cert SHA-256 matches the pre-known `b800dcf0a7725e2f71987c40d979757acd328a23de2e93a7efc0e400aeb2db69`. Reason: SPEC 4.6. BLOCKER: requires `app/release.keystore.properties` to exist with storeFile/storePassword/keyAlias/keyPassword for `~/Dev/dev-creds/toadlybroodleKeyStore.jks`. Create this file (gitignored) before running this cycle.
 - [medium] Publish `studfinder-v15-release.apk` as GitHub Release artifact attached to tag `v15`. Reason: SPEC 4.7 — F-Droid `Binaries:` URL target. Depends on 4.6.
 - [easy] Sign up for Amazon Associates (US + OneLink for UK/CA/AU). Reason: SPEC 1.2.

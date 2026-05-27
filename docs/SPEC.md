@@ -87,6 +87,9 @@ Mirror MinimaList's `docs/FDROID.md` checklist. Use the merge-request path (pref
 - [ ] 5.4 [medium] **Respond to reviewer feedback** (24-72 hour expected turnaround). Common asks: license-text confirmation, anti-features clarification, build-config tweaks. Iterate on the MR until merged.
 - [ ] 5.5 [easy] **Confirm app appears in F-Droid index** (typically 24-48 hours after MR merge). Capture the F-Droid listing URL — needed for Phase 7.
 
+**Review follow-ups (open — schedule as the next `/sst-dev-cycle` cycle):**
+- [ ] 5.6 [easy] [should-fix] `docs/fdroid/metadata/org.bitanon.studfinder.yml:13` — `Binaries:` uses `%v` (versionName "2.0") but Phase 4.5 tagged `v15` (versionCode-based) and Phase 4.7 plans filename `studfinder-v15-release.apk`; F-Droid's verifier resolves `%v` → "2.0" → looks for `studfinder-v2.0-release.apk` at tag `v2.0`, which will not exist, causing Binaries verification to fail at submission. Proposed fix: replace `v%v` with `v%c` in the `Binaries:` field and update `docs/test_fdroid_yaml.py:66` to assert `%c` instead of `%v`.
+
 ### Phase 6: Device testing & QA
 
 Before submitting to F-Droid (overlap with Phase 4-5 if useful), verify the stripped app actually works on a real device. The original app's value prop is sensor accuracy + responsiveness; regressions from the cloud-strip would be subtle (e.g. if any analytics call was inadvertently load-bearing on the activity-lifecycle path).
