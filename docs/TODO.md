@@ -20,6 +20,8 @@
 
 ## Next up (queued for next cycle)
 
+- [easy] [should-fix] 3.8 fix `app/build.gradle:17` storeFile path: replace `rootProject.file("app/" + storeFile)` with `file(storeFile)` so absolute keystore paths work; update `REMOVED-CLOUD-SURFACE.md` with correct storeFile format — review of 7463e01
+- [easy] [should-fix] 3.9 when SPEC 4.3 runs: remove `gradle.properties` `org.gradle.java.home` machine-specific JDK path and upgrade Gradle wrapper to 8.x+ (Java-21-compatible) so F-Droid's build server doesn't fail — review of 7463e01
 - [medium] Build + sign release APK with shared keystore; rename to `studfinder-v15-release.apk`; sanity-verify signing cert SHA-256 matches the pre-known `b800dcf0a7725e2f71987c40d979757acd328a23de2e93a7efc0e400aeb2db69`. Reason: SPEC 4.6 — verifies the keystore wiring is correct and produces the digest the fdroiddata YAML already expects.
 - [medium] Publish `studfinder-v15-release.apk` as GitHub Release artifact attached to tag `v15`. Reason: SPEC 4.7 — F-Droid `Binaries:` URL target.
 - [medium] Rewrite landing-page copy: lead with the F-Droid open-source app + physical-tools angle. Reason: SPEC 1.1 — kicks off the affiliate pivot in parallel with F-Droid prep.
