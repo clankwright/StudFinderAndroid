@@ -8,7 +8,7 @@ IssueTracker: https://github.com/toadlyBroodle/StudFinderAndroid/issues
 
 Name: Stud Finder
 
-AllowedAPKSigningKeys: b800dcf0a7725e2f71987c40d979757acd328a23de2e93a7efc0e400aeb2db69
+AllowedAPKSigningKeys: e04d3854fc1245e27b826feaa30298bda89a4c0528a2a0b7ddbc23ad60a72fd4
 
 Binaries: https://github.com/toadlyBroodle/StudFinderAndroid/releases/download/v%c/studfinder-v%c-release.apk
 

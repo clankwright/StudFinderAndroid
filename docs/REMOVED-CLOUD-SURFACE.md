@@ -43,8 +43,8 @@ App is now fully offline. Qualifies for F-Droid `NoAnti-Features`.
 Replaced the old `extras/key-signing/keyStoreCreds.properties` signing config with a load of `app/release.keystore.properties` (gitignored), mirroring MinimaList's pattern.
 
 **Keystore**: `~/Dev/dev-creds/toadlybroodleKeyStore.jks`
-**Cert SHA-256**: `b800dcf0a7725e2f71987c40d979757acd328a23de2e93a7efc0e400aeb2db69`
-(same cert used by MinimaList's F-Droid release — pre-known, no re-derivation needed)
+**Cert SHA-256**: `e04d3854fc1245e27b826feaa30298bda89a4c0528a2a0b7ddbc23ad60a72fd4`
+(derived by running `apksigner verify --print-certs studfinder-v15-release.apk` on the Phase 4.6 build; note: the `toadlybroodleKeyStore.jks` key is distinct from the cert used by MinimaList's earlier APKs, which were signed with a prior keystore no longer in dev-creds)
 
 The signing block in `app/build.gradle` is gated on `app/release.keystore.properties` existence so contributors without the keystore can still run `./gradlew assembleDebug` without error.
 

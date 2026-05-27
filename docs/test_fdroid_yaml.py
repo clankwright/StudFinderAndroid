@@ -9,7 +9,7 @@ REPO = Path("/home/rob/Dev/android/Studfinder")
 FDROID_DIR = REPO / "docs/fdroid"
 YAML_PATH = FDROID_DIR / "metadata/org.bitanon.studfinder.yml"
 PACKAGE_ID = "org.bitanon.studfinder"
-EXPECTED_SIGNING_KEY = "b800dcf0a7725e2f71987c40d979757acd328a23de2e93a7efc0e400aeb2db69"
+EXPECTED_SIGNING_KEY = "e04d3854fc1245e27b826feaa30298bda89a4c0528a2a0b7ddbc23ad60a72fd4"
 GITHUB_URL = "https://github.com/toadlyBroodle/StudFinderAndroid"
 
 
