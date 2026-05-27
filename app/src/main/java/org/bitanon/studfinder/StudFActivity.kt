@@ -129,6 +129,12 @@ class StudFActivity : AppCompatActivity() {
 			val intent = Intent(Intent.ACTION_VIEW, uri)
 			startActivity(intent)
 		}
+		// open Lightning donation section on website (SPEC 7.5)
+		instructions.setNegativeButton(R.string.donate_lightning) { _, _ ->
+			val uri = Uri.parse("https://studfinderapp.com/#donate")
+			val intent = Intent(Intent.ACTION_VIEW, uri)
+			startActivity(intent)
+		}
 		instructions.show()
 	}
 

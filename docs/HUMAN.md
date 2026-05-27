@@ -6,6 +6,13 @@
 
 ## Blocking
 
+- [ ] H7.1 [easy] **Verify / replace the placeholder Lightning address in the donate section**
+  SPEC 7.5 shipped the donation footer with `toadlybroodle@stacker.news` as a placeholder (guessed from GitHub username). Confirm this is your actual Lightning address, or replace it with the correct one (e.g. `user@getalby.com` or `user@stacker.news`). Two places to update: (1) `/home/rob/Dev/websites/studfinderapp.com/public_html/index.html` — search for `toadlybroodle@stacker.news` (appears twice: in the `href` attribute and as visible text); (2) no app change needed — the app donate button opens `https://studfinderapp.com/#donate`, so only the website needs the correct address. After updating, scp/rsync the file to the VPS and run the test suite to confirm the address format test still passes.
+  Blocks: none (7.5 is structurally complete; this refines the placeholder value)
+  Verify: grep -q 'toadlybroodle@stacker.news' /home/rob/Dev/websites/studfinderapp.com/public_html/index.html && echo "still placeholder" || echo "address updated"
+  Filed by: sst-dev-cycle at 2026-05-28T09:30:00Z.
+  Source: 7.5 implementation — Lightning address not found in codebase; placeholder used.
+
 - [ ] H1.1 [easy] **Sign up for Amazon Associates (US + OneLink for UK/CA/AU)**
   Go to associate-central.amazon.com, sign up for the US Amazon Associates program, then enroll in OneLink so UK/CA/AU traffic auto-routes to local storefronts with commission credited correctly. Once approved, paste the associate tag (format: `toadlybroodle-20` or similar) into a new file `docs/amazon-tag.txt` in this repo (gitignored — add `docs/amazon-tag.txt` to `.gitignore`). The dev cycle will then pick up SPEC 1.3 (product cards) on the next run. This cannot be automated: Amazon requires a human to accept terms, provide tax information, and create an account.
   Blocks: 1.2, 1.3, 1.4, 1.5

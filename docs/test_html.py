@@ -228,3 +228,34 @@ def test_ua_routing_cta_divs_present():
     assert 'id="cta-desktop"' in html, (
         'Desktop CTA container (id="cta-desktop") missing — SPEC 7.3/7.6; JS calls getElementById("cta-desktop") without null guard'
     )
+
+
+# SPEC 7.5: Lightning donation footer
+
+def test_donate_section_anchor_present():
+    """Website must have a #donate anchor so the in-app donate button can deep-link to it (SPEC 7.5)."""
+    html = read_html()
+    assert 'id="donate"' in html, (
+        'No id="donate" anchor found — SPEC 7.5; in-app button links to studfinderapp.com/#donate'
+    )
+
+
+def test_donate_lightning_content_present():
+    """Donation section must mention Lightning (SPEC 7.5)."""
+    html = read_html()
+    lower = html.lower()
+    assert "lightning" in lower or "⚡" in lower, (
+        "No Lightning reference found in page — SPEC 7.5"
+    )
+
+
+def test_donate_lightning_address_displayed():
+    """Donation section must display a Lightning address in user@domain format (SPEC 7.5)."""
+    import re
+    html = read_html()
+    donate_idx = html.lower().find("donate")
+    assert donate_idx != -1, "No donate section found — SPEC 7.5"
+    # address must appear somewhere on the page (not just in a link href attribute hidden from view)
+    assert re.search(r'[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}', html), (
+        "No Lightning address (user@domain) displayed on page — SPEC 7.5"
+    )

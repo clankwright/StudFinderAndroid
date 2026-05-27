@@ -23,6 +23,7 @@
     <string name="prefs_sensitivity_settings">SENSITIVITY</string>
 
     <string name="rate_support">SUPPORT</string>
+    <string name="donate_lightning">DONATE ⚡</string>
     <string name="wait_while_loading">LOADING…</string>
 
 </resources>
