@@ -45,21 +45,23 @@ def test_fdroid_cta_text_present():
     assert "open-source" in lower or "open source" in lower, "No open-source mention found"
 
 
-# SPEC 0.4: no analytics (decided 2026-05-28 against Plausible / GA4 — no third-party tracking)
+# SPEC 0.4: no on-page analytics. Regression guard against reintroducing any third-party
+# tracking surface (script tags, dataLayer pushes, event-call helpers, beacon endpoints).
 
-def test_no_plausible_analytics():
-    """No Plausible script, no Plausible event calls, no plausible.io references in the
-    served HTML. Guards against reintroducing the tracking snippet (which was embedded
-    but never connected to a real account; removed in favor of the stronger no-tracking
-    privacy stance)."""
+def test_no_third_party_analytics():
+    """The website ships zero third-party tracking. Asserts no script tags or call sites for
+    common analytics endpoints/helpers in either index.html or privacy.html."""
     index_html = read_html()
     with open(PRIVACY_PATH) as f:
         privacy_html = f.read()
+    forbidden = (
+        "plausible.io", "window.plausible", "plausible(",
+        "google-analytics.com", "googletagmanager.com", "gtag(",
+        "umami.js", "goatcounter",
+    )
     for label, content in (("index.html", index_html), ("privacy.html", privacy_html)):
-        for forbidden in ("plausible.io", "window.plausible", "plausible(", "Plausible"):
-            assert forbidden not in content, (
-                f"{label}: forbidden Plausible reference '{forbidden}' present"
-            )
+        for needle in forbidden:
+            assert needle not in content, f"{label}: forbidden tracking reference '{needle}' present"
 
 
 # SPEC 0.5: Sitemap lastmod
