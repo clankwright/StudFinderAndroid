@@ -273,5 +273,32 @@ def test_donate_address_comment_only_is_rejected():
     donate_idx = mock_html.lower().find("donate")
     donate_html = re.sub(r'<!--.*?-->', '', mock_html[donate_idx:], flags=re.DOTALL)
     assert not re.search(r'[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}', donate_html), (
-        "Comment-only email passed the address check — comment stripping not working"
+        "Comment-only email passed the address check, comment stripping not working"
+    )
+
+
+def test_charset_meta_declared_in_head():
+    """SPEC 0.6 — <meta charset="utf-8"> must be present in <head> as a belt-and-suspenders
+    fallback to the nginx-side `charset utf-8;` directive. Without this declaration, browsers
+    sniffing the bytes can briefly render Latin-1 before the HTTP header is parsed."""
+    html = read_html()
+    head_idx = html.lower().find("<head>")
+    head_end = html.lower().find("</head>", head_idx)
+    assert head_idx >= 0 and head_end > head_idx
+    head_block = html[head_idx:head_end]
+    assert '<meta charset="utf-8">' in head_block or "<meta charset='utf-8'>" in head_block, (
+        "Missing <meta charset=\"utf-8\"> in <head>"
+    )
+
+
+def test_no_em_dashes_in_html():
+    """SPEC 0.6 — the served HTML must be pure ASCII. Catches reintroduction of em-dashes,
+    curly quotes, or emoji that render as mojibake on charset misconfigurations."""
+    with open(HTML_PATH, "rb") as f:
+        raw = f.read()
+    non_ascii = [(i, b) for i, b in enumerate(raw) if b > 0x7F]
+    assert not non_ascii, (
+        f"Non-ASCII bytes found at offsets {[o for o,_ in non_ascii[:5]]}; "
+        f"first byte {hex(non_ascii[0][1]) if non_ascii else 'n/a'}; "
+        f"strip em-dashes / curly quotes / emoji to ASCII alternatives"
     )
