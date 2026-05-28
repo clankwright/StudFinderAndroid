@@ -16,3 +16,4 @@
 # is SPEC/TODO/HUMAN + dev-cycle tests, not part of the F-Droid build.
 docs/
 .skill-runs/
+.claude/
