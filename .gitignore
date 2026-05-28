@@ -10,3 +10,9 @@
 *.keystore
 *.keystore.properties
 *.apk
+
+# Project handoff docs + framework dogfood tests + chain run artifacts
+# stay local-only. The public app source repo is App-code only; docs/
+# is SPEC/TODO/HUMAN + dev-cycle tests, not part of the F-Droid build.
+docs/
+.skill-runs/
