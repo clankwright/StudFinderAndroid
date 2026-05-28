@@ -277,6 +277,37 @@ def test_donate_address_comment_only_is_rejected():
     )
 
 
+PRIVACY_PATH = "/home/rob/Dev/websites/studfinderapp.com/public_html/privacy.html"
+
+
+def test_privacy_policy_exists_and_covers_core_claims():
+    """SPEC 0.6 — public_html/privacy.html must exist and disclose the key claims:
+    app collects no data, website uses Plausible (no cookies), Lightning donations
+    pseudonymous, future affiliate/ads will be disclosed before going live."""
+    import os
+    assert os.path.exists(PRIVACY_PATH), f"privacy.html missing at {PRIVACY_PATH}"
+    with open(PRIVACY_PATH) as f:
+        content = f.read().lower()
+    expectations = [
+        "no personal data",
+        "plausible",
+        "no cookies",
+        "lightning",
+        "pseudonymous",
+        "tips@studfinderapp.com",
+        "affiliate",
+    ]
+    missing = [phrase for phrase in expectations if phrase not in content]
+    assert not missing, f"privacy.html missing expected disclosures: {missing}"
+
+
+def test_privacy_link_in_index_footer():
+    """Index footer must link to /privacy.html (not the previous placeholder)."""
+    html = read_html()
+    assert 'href="/privacy.html"' in html, "Privacy Policy link in footer must point to /privacy.html"
+    assert "privacypolicies.com" not in html, "Placeholder privacypolicies.com link must be removed"
+
+
 def test_charset_meta_declared_in_head():
     """SPEC 0.6 — <meta charset="utf-8"> must be present in <head> as a belt-and-suspenders
     fallback to the nginx-side `charset utf-8;` directive. Without this declaration, browsers
@@ -292,8 +323,9 @@ def test_charset_meta_declared_in_head():
 
 
 def test_no_em_dashes_in_html():
-    """SPEC 0.6 — the served HTML must be pure ASCII. Catches reintroduction of em-dashes,
-    curly quotes, or emoji that render as mojibake on charset misconfigurations."""
+    """SPEC 0.6 — the served HTML must be pure ASCII AND contain no em-dash entities
+    (&mdash;, &#8212;, &#x2014;). Catches reintroduction of em-dashes whether as raw
+    UTF-8 bytes or as HTML entities. Bolt icon &#9889; is allowed (renders as ⚡)."""
     with open(HTML_PATH, "rb") as f:
         raw = f.read()
     non_ascii = [(i, b) for i, b in enumerate(raw) if b > 0x7F]
@@ -302,3 +334,7 @@ def test_no_em_dashes_in_html():
         f"first byte {hex(non_ascii[0][1]) if non_ascii else 'n/a'}; "
         f"strip em-dashes / curly quotes / emoji to ASCII alternatives"
     )
+    html = raw.decode("utf-8")
+    forbidden_entities = ["&mdash;", "&#8212;", "&#x2014;", "&#X2014;"]
+    for ent in forbidden_entities:
+        assert ent not in html, f"Forbidden em-dash entity '{ent}' found in HTML"
