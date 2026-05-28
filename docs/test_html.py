@@ -45,34 +45,21 @@ def test_fdroid_cta_text_present():
     assert "open-source" in lower or "open source" in lower, "No open-source mention found"
 
 
-# SPEC 0.4: Plausible analytics
+# SPEC 0.4: no analytics (decided 2026-05-28 against Plausible / GA4 — no third-party tracking)
 
-def test_plausible_script_present():
-    html = read_html()
-    assert "plausible.io/js/script" in html, "Plausible script tag not found in <head>"
-    assert 'data-domain="studfinderapp.com"' in html, "Plausible data-domain not set to studfinderapp.com"
-
-
-def test_plausible_outbound_links_extension():
-    html = read_html()
-    assert "outbound-links" in html, (
-        "Plausible outbound-links extension missing — needed for automatic affiliate-click tracking in Phase 1"
-    )
-
-
-def test_plausible_stub_defined():
-    html = read_html()
-    assert "window.plausible" in html, (
-        "Plausible queue stub not defined — custom events will silently fail before the script loads"
-    )
-
-
-def test_fdroid_badge_click_event():
-    html = read_html()
-    assert (
-        "plausible('F-Droid-badge-click')" in html
-        or 'plausible("F-Droid-badge-click")' in html
-    ), "F-Droid-badge-click event not wired to the primary download button"
+def test_no_plausible_analytics():
+    """No Plausible script, no Plausible event calls, no plausible.io references in the
+    served HTML. Guards against reintroducing the tracking snippet (which was embedded
+    but never connected to a real account; removed in favor of the stronger no-tracking
+    privacy stance)."""
+    index_html = read_html()
+    with open(PRIVACY_PATH) as f:
+        privacy_html = f.read()
+    for label, content in (("index.html", index_html), ("privacy.html", privacy_html)):
+        for forbidden in ("plausible.io", "window.plausible", "plausible(", "Plausible"):
+            assert forbidden not in content, (
+                f"{label}: forbidden Plausible reference '{forbidden}' present"
+            )
 
 
 # SPEC 0.5: Sitemap lastmod
@@ -282,16 +269,15 @@ PRIVACY_PATH = "/home/rob/Dev/websites/studfinderapp.com/public_html/privacy.htm
 
 def test_privacy_policy_exists_and_covers_core_claims():
     """SPEC 0.6 — public_html/privacy.html must exist and disclose the key claims:
-    app collects no data, website uses Plausible (no cookies), Lightning donations
-    pseudonymous, future affiliate/ads will be disclosed before going live."""
+    app collects no data, website runs no analytics, Lightning donations pseudonymous,
+    future affiliate/ads will be disclosed before going live."""
     import os
     assert os.path.exists(PRIVACY_PATH), f"privacy.html missing at {PRIVACY_PATH}"
     with open(PRIVACY_PATH) as f:
         content = f.read().lower()
     expectations = [
         "no personal data",
-        "plausible",
-        "no cookies",
+        "no analytics",
         "lightning",
         "pseudonymous",
         "tips@studfinderapp.com",
