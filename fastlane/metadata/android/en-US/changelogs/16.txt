@@ -1,0 +1,1 @@
+v2.0.1 — Build hygiene: strips the Android Gradle Plugin's "Dependency metadata" signing block from release APKs so F-Droid's reproducible-build check passes. No user-facing or behavioral changes from v2.0.
