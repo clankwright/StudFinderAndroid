@@ -14,4 +14,4 @@ Limitations:
 The magnetometer detects metal, not wood directly. It works reliably on standard wood-framed walls with metal screws or nails. Concrete walls, steel studs, or plaster-over-metal-lath surfaces give different results — consider a dedicated hardware stud finder for those.
 
 Open source and F-Droid:
-StudFinder is fully open-source (Apache 2.0) and distributed through F-Droid. Zero proprietary dependencies: no AdMob, no Firebase, no Google Play Services. The app requires no INTERNET permission and works entirely offline. Source code: github.com/toadlyBroodle/StudFinderAndroid
+StudFinder is fully open-source (Apache 2.0) and distributed through F-Droid. Zero proprietary dependencies: no AdMob, no Firebase, no Google Play Services. The app requires no INTERNET permission and works entirely offline. Source code: github.com/clankwright/StudFinderAndroid

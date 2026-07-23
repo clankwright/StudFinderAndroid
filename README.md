@@ -7,7 +7,7 @@ Free, open-source, ad-free Android stud finder app. Uses the device magnetometer
 - No ads, no analytics, no crash reporting, no Google Play Services
 - Fully offline — no network permissions
 - Distributed via [F-Droid](https://f-droid.org) (submission in progress)
-- Source available at [github.com/toadlyBroodle/StudFinderAndroid](https://github.com/toadlyBroodle/StudFinderAndroid)
+- Source available at [github.com/clankwright/StudFinderAndroid](https://github.com/clankwright/StudFinderAndroid)
 
 ## Build
 
