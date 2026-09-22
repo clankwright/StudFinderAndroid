@@ -1,0 +1,1 @@
+v2.0.2 — Store listing screenshots of the main screen, calibration, stud detection, and instructions. No changes to detection.
