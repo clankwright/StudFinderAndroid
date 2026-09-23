@@ -18,8 +18,6 @@ Free, open-source, ad-free Android stud finder app. Uses the device magnetometer
   <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/04-instructions.png" width="200" alt="Instructions dialog">
 </p>
 
-F-Droid uses the same images from `fastlane/metadata/android/en-US/images/phoneScreenshots/`.
-
 ## Build
 
 ```bash
